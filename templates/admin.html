@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administration</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style/admin.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/main.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='icon/NotLinkedIn_icon.ico') }}">
     <script src="{{ url_for('static', filename='script/script.js') }}"></script>
     <script src="{{ url_for('static', filename='script/admin.js') }}"></script>
@@ -15,11 +14,9 @@
         <div class="container">
             <div class="header-logo">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
-                <h1>Administration</h1>
             </div>
             <nav>
                 <a href="{{ url_for('index') }}">Accueil</a>
-                <span>Bonjour {{ session.username }} !</span>
                 <a href="{{ url_for('logout') }}">Déconnexion</a>
             </nav>
         </div>
@@ -27,22 +24,36 @@
 
     <main class="container">
         <section class="admin-panel">
-            <h2>Panneau d'administration</h2>
+            <div class="admin-header">
+                <h1 class="admin-title">Panneau d'administration</h1>
+                <p class="admin-subtitle">Gérez votre plateforme d'emploi</p>
+            </div>
             
             <div class="admin-tabs">
-                <button class="tab-btn active" onclick="showTab('companies')">Entreprises</button>
-                <button class="tab-btn" onclick="showTab('advertisements')">Annonces</button>
-                <button class="tab-btn" onclick="showTab('applications')">Candidatures</button>
+                <button class="tab-btn active" onclick="showTab('companies')">
+                    <span class="tab-icon">🏢</span>
+                    Entreprises
+                </button>
+                <button class="tab-btn" onclick="showTab('advertisements')">
+                    <span class="tab-icon">💼</span>
+                    Annonces
+                </button>
+                <button class="tab-btn" onclick="showTab('applications')">
+                    <span class="tab-icon">📋</span>
+                    Candidatures
+                </button>
             </div>
 
             <!-- Companies Tab -->
             <div id="companies" class="tab-content active">
                 <div class="section-header">
-                    <h3>Gestion des Entreprises</h3>
-                    <button class="btn btn-primary" onclick="showAddCompanyForm()">Ajouter une entreprise</button>
+                    <h3 class="section-title">Gestion des Entreprises</h3>
+                    <button class="btn btn-primary admin-action-btn" onclick="showAddCompanyForm()">
+                        <span>➕</span> Ajouter une entreprise
+                    </button>
                 </div>
                 
-                <div id="companies-list">
+                <div id="companies-list" class="admin-list">
                     <!-- Companies will be loaded here -->
                 </div>
                 
@@ -54,11 +65,13 @@
             <!-- Advertisements Tab -->
             <div id="advertisements" class="tab-content">
                 <div class="section-header">
-                    <h3>Gestion des Annonces</h3>
-                    <button class="btn btn-primary" onclick="showAddAdForm()">Ajouter une annonce</button>
+                    <h3 class="section-title">Gestion des Annonces</h3>
+                    <button class="btn btn-primary admin-action-btn" onclick="showAddAdForm()">
+                        <span>➕</span> Ajouter une annonce
+                    </button>
                 </div>
                 
-                <div id="advertisements-list">
+                <div id="advertisements-list" class="admin-list">
                     <!-- Advertisements will be loaded here -->
                 </div>
                 
@@ -70,10 +83,10 @@
             <!-- Applications Tab -->
             <div id="applications" class="tab-content">
                 <div class="section-header">
-                    <h3>Candidatures Reçues</h3>
+                    <h3 class="section-title">Candidatures Reçues</h3>
                 </div>
                 
-                <div id="applications-list">
+                <div id="applications-list" class="admin-list">
                     <!-- Applications will be loaded here -->
                 </div>
                 

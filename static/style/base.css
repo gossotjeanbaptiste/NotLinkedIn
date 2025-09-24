@@ -1,0 +1,230 @@
+/* ================== BASE & RESET - PORTFOLIO STYLE ================== */
+/* Styles de base adaptés du portfolio avec la police Bitcount et les effets */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeSpeed;
+    overflow-x: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    * {
+        transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, width 0.2s ease, height 0.2s ease;
+    }
+}
+
+/* ====== POLICE BITCOUNT ====== */
+@font-face {
+    font-family: "Bitcount";
+    font-weight: 300;
+    src: url("../fonts/BitcountPropSingle-Light.ttf");
+    font-display: swap;
+}
+
+/* ====== ANIMATIONS KEYFRAMES ====== */
+@keyframes spanFadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes fadeIn {
+    0% { 
+        opacity: 0; 
+        transform: translateY(30px);
+    }
+    100% { 
+        opacity: 1; 
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    0% { 
+        opacity: 0; 
+        transform: translateX(-30px);
+    }
+    100% { 
+        opacity: 1; 
+        transform: translateX(0);
+    }
+}
+
+@keyframes scaleIn {
+    0% { 
+        opacity: 0; 
+        transform: scale(0.8);
+    }
+    100% { 
+        opacity: 1; 
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { 
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+@keyframes rainbow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ====== LAYOUT GÉNÉRAL ====== */
+body {
+    background: var(--primary-gradient);
+    font-family: "Bitcount", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    margin: 0;
+    padding: 70px 0 0 0;
+    color: var(--white);
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* ====== TYPOGRAPHIE ====== */
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    padding: 0;
+    color: var(--white);
+    font-family: "Bitcount", sans-serif;
+    font-weight: 300;
+}
+
+h1 {
+    font-size: var(--font-xl);
+    margin-bottom: var(--spacing-lg);
+}
+
+h2 {
+    font-size: var(--font-lg);
+    margin-bottom: var(--spacing-md);
+}
+
+h3 {
+    font-size: var(--font-ml);
+    margin-bottom: var(--spacing-md);
+}
+
+h4 {
+    font-size: var(--font-md);
+    margin-bottom: var(--spacing-sm);
+}
+
+p {
+    line-height: 1.6;
+    margin: 0 0 var(--spacing-md) 0;
+}
+
+a {
+    color: var(--white);
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+
+a:hover {
+    color: var(--white-8);
+    text-decoration: underline;
+}
+
+/* ====== OPTIMISATIONS PERFORMANCE ====== */
+img {
+    will-change: transform;
+    backface-visibility: hidden;
+    max-width: 100%;
+    height: auto;
+}
+
+/* ====== UTILITAIRES ====== */
+.container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+}
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: var(--spacing-sm); }
+.mb-2 { margin-bottom: var(--spacing-md); }
+.mb-3 { margin-bottom: var(--spacing-lg); }
+.mb-4 { margin-bottom: var(--spacing-xl); }
+
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: var(--spacing-sm); }
+.mt-2 { margin-top: var(--spacing-md); }
+.mt-3 { margin-top: var(--spacing-lg); }
+.mt-4 { margin-top: var(--spacing-xl); }
+
+/* ====== ACCESSIBILITÉ ====== */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ====== SÉLECTION DE TEXTE ====== */
+::selection {
+    background-color: var(--white-3);
+    color: var(--white);
+}
+
+::-moz-selection {
+    background-color: var(--white-3);
+    color: var(--white);
+}
+
+/* ====== SCROLLBAR PERSONNALISÉE ====== */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--white-1);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--white-3);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--white-5);
+}
+
+/* ====== FOCUS VISIBLE ====== */
+:focus-visible {
+    outline: 2px solid var(--white-5);
+    outline-offset: 2px;
+}
+
+/* ====== PRINT STYLES ====== */
+@media print {
+    body {
+        background: white !important;
+        color: black !important;
+    }
+    
+    .no-print {
+        display: none !important;
+    }
+}

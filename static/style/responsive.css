@@ -1,0 +1,116 @@
+/* ================== RESPONSIVE DESIGN - JOB BOARD ================== */
+
+/* ====== BREAKPOINTS MOBILE FIRST ====== */
+
+/* Extra Small devices (phones, less than 576px) */
+@media (max-width: 575px) {
+    .container {
+        padding: 0 var(--space-3);
+    }
+    
+    .section {
+        padding: var(--space-8) 0;
+    }
+    
+    .card {
+        padding: var(--space-4);
+        border-radius: var(--border-radius-md);
+    }
+    
+    .btn {
+        padding: var(--space-3) var(--space-4);
+        font-size: var(--text-sm);
+    }
+    
+    .form-input {
+        height: 44px;
+        padding: var(--space-3);
+    }
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) and (max-width: 767px) {
+    .jobs-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991px) {
+    .jobs-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .jobs-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .jobs-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ====== ORIENTATIONS ====== */
+@media (orientation: landscape) and (max-height: 500px) {
+    .hero {
+        padding: var(--space-8) 0;
+    }
+    
+    .auth-container {
+        padding: var(--space-4) 0;
+    }
+}
+
+/* ====== HIGH DPI DISPLAYS ====== */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+    .header-logo .logo {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+/* ====== REDUCED MOTION ====== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ====== DARK MODE SUPPORT ====== */
+@media (prefers-color-scheme: dark) {
+    /* Variables pour le mode sombre peuvent être ajoutées ici si nécessaire */
+    /* Pour l'instant, nous gardons le thème clair */
+}
+
+/* ====== PRINT OPTIMIZATION ====== */
+@media print {
+    .header,
+    .footer,
+    .btn,
+    .auth-links,
+    .job-actions {
+        display: none !important;
+    }
+    
+    .container {
+        max-width: none !important;
+        padding: 0 !important;
+    }
+    
+    .card {
+        box-shadow: none !important;
+        border: 1px solid var(--gray-400) !important;
+        margin-bottom: var(--space-4) !important;
+    }
+}

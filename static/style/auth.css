@@ -1,0 +1,374 @@
+/* ================== AUTHENTIFICATION - PORTFOLIO STYLE ================== */
+/* Styles pour login, register et auth avec design glass morphism */
+
+/* ====== CONTENEUR AUTH PRINCIPAL ====== */
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-lg);
+    background: var(--primary-gradient);
+}
+
+.auth-card {
+    background: var(--white-1);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--white-2);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-3xl);
+    width: 100%;
+    max-width: 400px;
+    box-shadow: var(--shadow-xl);
+    animation: fadeIn 0.6s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: var(--rainbow-gradient);
+    transition: left 0.5s ease;
+}
+
+.auth-card:hover::before {
+    left: 0;
+}
+
+/* ====== HEADER AUTH ====== */
+.auth-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+}
+
+.auth-title {
+    font-size: var(--font-lg);
+    font-weight: 300;
+    margin-bottom: var(--spacing-sm);
+    color: var(--white);
+    background: var(--rainbow-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 300% 300%;
+    animation: rainbow 3s ease infinite;
+}
+
+.auth-subtitle {
+    color: var(--white-8);
+    font-size: var(--font-base);
+    margin: 0;
+}
+
+.auth-logo {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto var(--spacing-lg) auto;
+    border-radius: 50%;
+    display: block;
+    transition: var(--transition-smooth);
+}
+
+.auth-logo:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* ====== FORMULAIRES AUTH ====== */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.auth-form .form-group {
+    position: relative;
+    margin-bottom: var(--spacing-lg);
+}
+
+.auth-form .form-label {
+    display: block;
+    margin-bottom: var(--spacing-sm);
+    color: var(--white);
+    font-weight: 300;
+    font-size: var(--font-sm);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.auth-form .form-control {
+    width: 100%;
+    padding: var(--spacing-md) var(--spacing-md);
+    background: var(--white-08);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--white-2);
+    border-radius: var(--border-radius-small);
+    color: var(--white);
+    font-family: "Bitcount", sans-serif;
+    font-size: var(--font-base);
+    transition: var(--transition-smooth);
+    box-sizing: border-box;
+}
+
+.auth-form .form-control::placeholder {
+    color: var(--white-5);
+}
+
+.auth-form .form-control:focus {
+    outline: none;
+    border-color: var(--white-5);
+    background: var(--white-15);
+    box-shadow: 0 0 0 3px var(--white-1);
+    transform: translateY(-1px);
+}
+
+.auth-form .form-control:invalid:not(:placeholder-shown) {
+    border-color: var(--danger);
+    background: var(--danger-bg);
+}
+
+.auth-form .form-control:valid:not(:placeholder-shown) {
+    border-color: var(--success);
+    background: var(--success-bg);
+}
+
+/* ====== BOUTONS AUTH ====== */
+.auth-submit {
+    background: var(--rainbow-gradient);
+    background-size: 300% 300%;
+    animation: rainbow 3s ease infinite;
+    border: none;
+    color: var(--white);
+    border-radius: var(--border-radius-pill);
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-family: "Bitcount", sans-serif;
+    font-size: var(--font-base);
+    font-weight: bold;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: var(--spacing-md);
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.auth-submit:active {
+    transform: translateY(0);
+}
+
+.auth-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.auth-submit:disabled:hover {
+    transform: none;
+}
+
+/* ====== LIENS AUTH ====== */
+.auth-links {
+    text-align: center;
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--white-2);
+}
+
+.auth-link {
+    color: var(--white-8);
+    text-decoration: none;
+    font-size: var(--font-sm);
+    transition: var(--transition-fast);
+    display: inline-block;
+    margin: 0 var(--spacing-sm);
+}
+
+.auth-link:hover {
+    color: var(--white);
+    text-decoration: underline;
+}
+
+.auth-link.primary {
+    background: var(--white-1);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-pill);
+    border: 1px solid var(--white-3);
+}
+
+.auth-link.primary:hover {
+    background: var(--white-2);
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+/* ====== MESSAGES D'ERREUR/SUCCÈS ====== */
+.auth-message {
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-small);
+    margin-bottom: var(--spacing-lg);
+    backdrop-filter: blur(10px);
+    border: 1px solid;
+    animation: slideIn 0.3s ease;
+}
+
+.auth-message.error {
+    background: var(--danger-bg);
+    border-color: var(--danger);
+    color: var(--white);
+}
+
+.auth-message.success {
+    background: var(--success-bg);
+    border-color: var(--success);
+    color: var(--white);
+}
+
+.auth-message.info {
+    background: var(--info-bg);
+    border-color: var(--info);
+    color: var(--white);
+}
+
+/* ====== VALIDATIONS INLINE ====== */
+.form-validation {
+    font-size: var(--font-sm);
+    margin-top: var(--spacing-xs);
+    animation: slideIn 0.2s ease;
+}
+
+.form-validation.error {
+    color: var(--danger);
+}
+
+.form-validation.success {
+    color: var(--success);
+}
+
+/* ====== INDICATEUR DE FORCE MOT DE PASSE ====== */
+.password-strength {
+    height: 4px;
+    background: var(--white-2);
+    border-radius: 2px;
+    margin-top: var(--spacing-sm);
+    overflow: hidden;
+}
+
+.password-strength-bar {
+    height: 100%;
+    width: 0%;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+.password-strength.weak .password-strength-bar {
+    width: 33%;
+    background: var(--danger);
+}
+
+.password-strength.medium .password-strength-bar {
+    width: 66%;
+    background: var(--warning);
+}
+
+.password-strength.strong .password-strength-bar {
+    width: 100%;
+    background: var(--success);
+}
+
+/* ====== CHECKBOX ET RADIO ====== */
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin: var(--spacing-md) 0;
+}
+
+.form-check input[type="checkbox"],
+.form-check input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-blue);
+    cursor: pointer;
+}
+
+.form-check label {
+    cursor: pointer;
+    font-size: var(--font-sm);
+    color: var(--white-8);
+    margin: 0;
+}
+
+/* ====== LOADING STATE ====== */
+.auth-loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.auth-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--white-2);
+    border-top: 2px solid var(--white);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 480px) {
+    .auth-container {
+        padding: var(--spacing-md);
+    }
+    
+    .auth-card {
+        padding: var(--spacing-xl);
+    }
+    
+    .auth-title {
+        font-size: var(--font-ml);
+    }
+    
+    .auth-form .form-control {
+        padding: var(--spacing-sm);
+    }
+    
+    .auth-submit {
+        padding: var(--spacing-sm) var(--spacing-lg);
+    }
+}
+
+/* ====== ANIMATIONS SPÉCIALES ====== */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.auth-card.floating {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* ====== DARK MODE SUPPORT ====== */
+@media (prefers-color-scheme: dark) {
+    .auth-card {
+        background: var(--white-08);
+        border-color: var(--white-15);
+    }
+}

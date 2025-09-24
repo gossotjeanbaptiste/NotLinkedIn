@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/main.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='icon/NotLinkedIn_icon.ico') }}">
 </head>
 <body>
@@ -13,13 +12,11 @@
         <div class="container">
             <div class="header-logo">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
-                <h1>Connexion</h1>
             </div>
             <nav>
                 <a href="{{ url_for('index') }}">Accueil</a>
                 {% if session.user_id %}
                     <a href="{{ url_for('profile') }}">Mon Profil</a>
-                    <span>Bonjour {{ session.username }} !</span>
                     {% if session.is_admin %}
                         <a href="{{ url_for('admin') }}">Administration</a>
                     {% endif %}
@@ -31,49 +28,47 @@
         </div>
     </header>
 
-    <main class="container">
-        <div class="login-container">
-            <div class="login-card">
-                <h2 class="login-title">Connexion</h2>
-                
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                            <div class="login-alert alert-{{ category }}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
+    <main class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="auth-logo">
+                <h2 class="auth-title">Connexion</h2>
+                <p class="auth-subtitle">Accédez à votre espace personnel</p>
+            </div>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
 
-                <form method="POST">
-                    <div class="form-group">
-                        <label for="login">Nom d'utilisateur:</label>
-                        <input type="text" id="login" name="login" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="password">Mot de passe:</label>
-                        <input type="password" id="password" name="password" required>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary login-btn">
-                        Se connecter
-                    </button>
-                </form>
+            <form method="POST" class="auth-form">
+                <div class="form-group">
+                    <label for="login" class="form-label">Nom d'utilisateur</label>
+                    <input type="text" id="login" name="login" class="form-control" placeholder="Saisissez votre nom d'utilisateur" required>
+                </div>
                 
-                <p class="login-footer">
+                <div class="form-group">
+                    <label for="password" class="form-label">Mot de passe</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Saisissez votre mot de passe" required>
+                </div>
+                
+                <button type="submit" class="auth-submit">
+                    Se connecter
+                </button>
+            </form>
+            
+            <div class="auth-links">
+                <p>
                     Pas encore de compte ? 
-                    <a href="{{ url_for('register') }}" class="login-footer-link">Inscrivez-vous ici</a>
+                    <a href="{{ url_for('register') }}" class="auth-link">Inscrivez-vous ici</a>
                 </p>
             </div>
         </div>
     </main>
-
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 Job Board. Tous droits réservés.</p>
-        </div>
-    </footer>
 </body>
 </html>
