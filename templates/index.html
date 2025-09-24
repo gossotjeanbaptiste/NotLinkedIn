@@ -12,7 +12,9 @@
     <header>
         <div class="container">
             <div class="header-logo">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+                </a>
             </div>
             <nav class="nav-main">
                 <a href="{{ url_for('index') }}" class="nav-link">Accueil</a>
@@ -53,9 +55,6 @@
                             <div class="job-info">
                                 <h3 class="job-title">{{ ad.title }}</h3>
                                 <p class="job-company-name">{{ ad.company_name }}</p>
-                            </div>
-                            <div class="job-company">
-                                {{ ad.company_name[:2].upper() }}
                             </div>
                         </div>
                         
@@ -100,40 +99,43 @@
 
     <!-- Application Modal -->
     <div id="applicationModal" class="modal hidden">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3>Postuler à cette offre</h3>
-            <form id="applicationForm">
+        <span class="close">&times;</span>
+        <div class="modal-header">
+            <h3 class="modal-title">Postuler à cette offre</h3>
+            <p class="modal-subtitle">Partagez votre motivation</p>
+        </div>
+        <form id="applicationForm" class="modal-form">
                 <input type="hidden" id="ad_id" name="ad_id">
                 
                 {% if not session.user_id %}
                 <div class="form-group">
-                    <label for="applicant_name">Nom complet:</label>
-                    <input type="text" id="applicant_name" name="applicant_name" required>
+                    <label for="applicant_name" class="form-label">Nom complet</label>
+                    <input type="text" id="applicant_name" name="applicant_name" class="form-control" placeholder="Votre nom complet" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="applicant_email">Email:</label>
-                    <input type="email" id="applicant_email" name="applicant_email" required>
+                    <label for="applicant_email" class="form-label">Email</label>
+                    <input type="email" id="applicant_email" name="applicant_email" class="form-control" placeholder="votre@email.com" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="applicant_phone">Téléphone:</label>
-                    <input type="tel" id="applicant_phone" name="applicant_phone">
+                    <label for="applicant_phone" class="form-label">Téléphone</label>
+                    <input type="tel" id="applicant_phone" name="applicant_phone" class="form-control" placeholder="0123456789">
                 </div>
                 {% endif %}
                 
                 <div class="form-group">
-                    <label for="application_message">Message de motivation:</label>
-                    <textarea id="application_message" name="message" rows="5" required></textarea>
+                    <label for="application_message" class="form-label">Message de motivation</label>
+                    <textarea id="application_message" name="message" rows="5" class="form-control" placeholder="Expliquez pourquoi vous êtes le candidat idéal..." required></textarea>
                 </div>
                 
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-success">Envoyer la candidature</button>
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Annuler</button>
-                </div>
+                <button type="submit" class="modal-submit-btn">
+                    Envoyer la candidature
+                </button>
+                <button type="button" class="modal-cancel-btn" onclick="closeModal()">
+                    Annuler
+                </button>
             </form>
-        </div>
     </div>
 
     <footer>

@@ -13,21 +13,20 @@
     <header>
         <div class="container">
             <div class="header-logo">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
-                <h1>Profile</h1>
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+                </a>
             </div>
-            <nav>
-                <a href="{{ url_for('index') }}">Accueil</a>
+            <nav class="nav-main">
+                <a href="{{ url_for('index') }}" class="nav-link">Accueil</a>
                 {% if session.user_id %}
-                    <a href="{{ url_for('profile') }}">Mon Profil</a>
-                    <span>Bonjour {{ session.username }} !</span>
                     {% if session.is_admin %}
-                        <a href="{{ url_for('admin') }}">Administration</a>
+                        <a href="{{ url_for('admin') }}" class="nav-link">Administration</a>
                     {% endif %}
-                    <a href="{{ url_for('logout') }}">Déconnexion</a>
+                    <a href="{{ url_for('logout') }}" class="nav-link">Déconnexion</a>
                 {% else %}
-                    <a href="{{ url_for('login') }}">Connexion</a>
-                    <a href="{{ url_for('register') }}">Inscription</a>
+                    <a href="{{ url_for('login') }}" class="nav-link">Connexion</a>
+                    <a href="{{ url_for('register') }}" class="nav-link">Inscription</a>
                 {% endif %}
             </nav>
         </div>

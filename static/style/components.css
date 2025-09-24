@@ -153,50 +153,34 @@
     backdrop-filter: blur(15px);
 }
 
-/* ====== ANIMATION BOUTON EN SAVOIR PLUS ====== */
+/* ====== BOUTONS EN SAVOIR PLUS ET POSTULER ====== */
 .learn-more-btn {
-    position: relative;
-    overflow: hidden;
-    transition: var(--transition-smooth);
     background: transparent !important;
     border: 2px solid var(--white-5) !important;
-}
-
-.learn-more-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: var(--rainbow-gradient);
-    transition: left 0.4s ease;
-    z-index: 0;
-}
-
-.learn-more-btn:hover::before {
-    left: 0;
+    color: var(--white-8) !important;
+    border-radius: var(--border-radius-pill) !important;
+    padding: var(--spacing-sm) var(--spacing-lg) !important;
+    font-family: "Bitcount", sans-serif !important;
+    font-size: var(--font-sm) !important;
+    font-weight: 400 !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: var(--transition-smooth) !important;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
 }
 
 .learn-more-btn:hover {
+    background: var(--white-1) !important;
+    border-color: var(--white) !important;
     color: var(--white) !important;
-    border-color: transparent !important;
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    transform: translateY(-1px) !important;
+    box-shadow: var(--shadow-sm) !important;
 }
 
 .learn-more-btn:active {
-    transform: translateY(0);
-}
-
-/* Contenu du bouton au-dessus de l'arrière-plan */
-.learn-more-btn {
-    z-index: 1;
-}
-
-.learn-more-btn > * {
-    position: relative;
-    z-index: 2;
+    transform: translateY(0) !important;
 }
 
 /* ====== BOUTONS D'ACTION JOB ====== */
@@ -214,35 +198,32 @@
 }
 
 .apply-btn {
-    background: var(--rainbow-gradient) !important;
-    background-size: 200% 200% !important;
-    animation: rainbow 4s ease infinite !important;
-    border: 2px solid transparent !important;
-    font-weight: bold !important;
+    background: transparent !important;
+    border: 2px solid var(--white-5) !important;
+    color: var(--white-8) !important;
+    border-radius: var(--border-radius-pill) !important;
+    padding: var(--spacing-sm) var(--spacing-lg) !important;
+    font-family: "Bitcount", sans-serif !important;
+    font-size: var(--font-sm) !important;
+    font-weight: 400 !important;
     text-transform: uppercase;
     letter-spacing: 1px;
+    transition: var(--transition-smooth) !important;
+    backdrop-filter: blur(10px);
     position: relative;
     overflow: hidden;
 }
 
-.apply-btn::after {
-    content: '→';
-    position: absolute;
-    right: -20px;
-    top: 50%;
-    transform: translateY(-50%);
-    transition: right 0.3s ease;
-    font-weight: bold;
-}
-
-.apply-btn:hover::after {
-    right: var(--spacing-sm);
-}
-
 .apply-btn:hover {
-    padding-right: var(--spacing-xl);
-    transform: translateY(-3px) !important;
-    box-shadow: var(--shadow-lg) !important;
+    background: var(--white-1) !important;
+    border-color: var(--white) !important;
+    color: var(--white) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+.apply-btn:active {
+    transform: translateY(0) !important;
 }
 
 .btn-success {
@@ -406,7 +387,7 @@
 }
 
 .form-control:valid {
-    border-color: var(--success);
+    border-color: var(--white-5);
 }
 
 .form-error {
@@ -599,5 +580,194 @@
     .btn-lg {
         padding: var(--spacing-sm) var(--spacing-lg);
         font-size: var(--font-base);
+    }
+}
+
+/* ====== MODAL STYLES ====== */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-2xl);
+}
+
+#applicationModal {
+    background: var(--white-1);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--white-2);
+    border-radius: var(--border-radius);
+    width: 95%;
+    min-width: 800px;
+    max-width: 1200px;
+    height: 90vh;
+    max-height: 95vh;
+    overflow: visible;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-2xl);
+}
+
+#applicationModal .modal-header {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+#applicationModal .modal-title {
+    font-size: var(--font-xl);
+    color: var(--white);
+    margin-bottom: var(--spacing-sm);
+    font-weight: 300;
+}
+
+#applicationModal .modal-subtitle {
+    color: var(--white-8);
+    font-size: var(--font-lg);
+    margin: 0;
+}
+
+#applicationModal .modal-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+#applicationModal .form-group {
+    width: 100%;
+    margin-bottom: var(--spacing-md);
+}
+
+#applicationModal .form-label {
+    color: var(--white-8);
+    font-size: var(--font-md);
+    margin-bottom: var(--spacing-xxs);
+    display: block;
+    font-weight: 400;
+}
+
+#applicationModal .form-control {
+    width: 100%;
+    padding: var(--spacing-md);
+    background: var(--white-05);
+    border: 1px solid var(--white-2);
+    border-radius: var(--border-radius);
+    color: var(--white);
+    font-size: var(--font-ml);
+    backdrop-filter: blur(10px);
+    transition: var(--transition-smooth);
+}
+
+#applicationModal .form-control::placeholder {
+    color: var(--white-6);
+}
+
+#applicationModal .form-control:focus {
+    outline: none;
+    border-color: var(--white-5);
+    background: var(--white-1);
+    box-shadow: 0 0 0 2px var(--white-2);
+}
+
+#applicationModal textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+}
+
+#applicationModal .modal-submit-btn,
+#applicationModal .modal-cancel-btn {
+    margin-top: var(--spacing-sm);
+    padding: var(--spacing-md);
+    font-size: var(--font-ml);
+    background: var(--white-1);
+    border: 2px solid var(--white-3);
+    color: var(--white);
+    border-radius: var(--border-radius-pill);
+    cursor: pointer;
+    font-family: "Bitcount", sans-serif;
+    font-weight: 400;
+    transition: var(--transition-smooth);
+    backdrop-filter: blur(10px);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    width: 100%;
+    text-align: center;
+    display: block;
+}
+
+#applicationModal .modal-submit-btn:hover,
+#applicationModal .modal-cancel-btn:hover {
+    background: var(--white-2);
+    border-color: var(--white-5);
+    transform: translateY(-2px);
+}
+
+.close {
+    position: absolute;
+    right: 1.5rem;
+    top: 1.5rem;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--white-8);
+    font-weight: bold;
+    z-index: 10;
+    transition: var(--transition-fast);
+}
+
+.close:hover {
+    color: var(--white);
+    transform: scale(1.1);
+}
+
+/* Modal specific styles - larger text */
+.modal .auth-card .auth-title {
+    font-size: var(--font-lg) !important;
+    margin-bottom: var(--spacing-md) !important;
+}
+
+.modal .auth-card .auth-subtitle {
+    font-size: var(--font-ml) !important;
+    margin-bottom: var(--spacing-lg) !important;
+}
+
+.modal .auth-form .form-label {
+    font-size: var(--font-base) !important;
+    margin-bottom: var(--spacing-sm) !important;
+}
+
+.modal .auth-form .form-control {
+    font-size: var(--font-base) !important;
+    padding: var(--spacing-lg) !important;
+    min-height: 45px !important;
+}
+
+.modal .auth-form textarea.form-control {
+    min-height: 120px !important;
+    font-size: var(--font-base) !important;
+    line-height: 1.5 !important;
+}
+
+.modal .auth-form .apply-btn,
+.modal .auth-form .learn-more-btn {
+    font-size: var(--font-base) !important;
+    padding: var(--spacing-md) var(--spacing-xl) !important;
+    min-height: 45px !important;
+    margin: var(--spacing-sm) 0 !important;
+}
+
+/* Responsive modal */
+@media (max-width: 768px) {
+    .modal-content {
+        margin: 5% auto;
+        width: 95%;
+        min-width: 300px;
+        max-width: 500px;
     }
 }

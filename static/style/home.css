@@ -208,7 +208,7 @@
 
 .jobs-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    grid-template-columns: 1fr;
     gap: var(--spacing-lg);
 }
 
@@ -236,26 +236,11 @@
     animation-delay: 0.2s;
 }
 
-.job-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 3px;
-    background: var(--rainbow-gradient);
-    transition: left 0.5s ease;
-}
-
 .job-card:hover {
     background: var(--white-15);
     border-color: var(--white-3);
     transform: translateY(-5px);
     box-shadow: var(--shadow-xl);
-}
-
-.job-card:hover::before {
-    left: 0;
 }
 
 .job-header {
@@ -264,20 +249,6 @@
     align-items: flex-start;
     margin-bottom: var(--spacing-md);
     gap: var(--spacing-md);
-}
-
-.job-company {
-    width: 50px;
-    height: 50px;
-    background: var(--white-2);
-    border-radius: var(--border-radius-small);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    color: var(--white);
-    font-size: var(--font-sm);
-    flex-shrink: 0;
 }
 
 .job-info {
@@ -311,12 +282,8 @@
     align-items: center;
     gap: var(--spacing-xs);
     color: var(--white-8);
-    font-size: var(--font-sm);
+    font-size: var(--font-md);
 }
-
-.job-location::before { content: '📍'; }
-.job-salary::before { content: '💰'; }
-.job-type::before { content: '⏰'; }
 
 .job-description {
     color: var(--white-8);
@@ -324,9 +291,12 @@
     margin: var(--spacing-md) 0;
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: var(--font-md);
+    font-weight: 400;
 }
 
 .job-tags {

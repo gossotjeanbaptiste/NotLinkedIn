@@ -8,10 +8,12 @@
 }
 
 .profile-section {
-    background: white;
+    background: var(--white-1);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--white-2);
     padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
 }
 
 .profile-info {
@@ -20,13 +22,13 @@
 
 .profile-info label {
     font-weight: 600;
-    color: #4a5568;
+    color: var(--white);
     display: inline-block;
     min-width: 120px;
 }
 
 .profile-info span {
-    color: #2d3748;
+    color: var(--white-8);
 }
 
 .applications-list {
@@ -60,12 +62,12 @@
 .application-title {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #2d3748;
+    color: var(--white);
     margin-bottom: 0.5rem;
 }
 
 .application-company {
-    color: #667eea;
+    color: var(--white-8);
     font-weight: 500;
 }
 
@@ -125,7 +127,7 @@
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
-    color: #4a5568;
+    color: var(--white);
 }
 
 .form-group input,
@@ -181,7 +183,7 @@
 
 .profile-section-title {
     margin-bottom: 1.5rem;
-    color: #2d3748;
+    color: var(--white);
 }
 
 .edit-profile-btn {

@@ -30,11 +30,22 @@ header .container {
     gap: var(--spacing-sm);
 }
 
+.header-logo a {
+    text-decoration: none;
+    display: inline-block;
+    transition: var(--transition-fast);
+}
+
+.header-logo a:hover {
+    transform: scale(1.05);
+}
+
 .header-logo img {
     width: 200px;
     height: 135px;
     border-radius: 50%;
     transition: var(--transition-fast);
+    display: block;
 }
 
 .header-logo img:hover {
@@ -59,37 +70,31 @@ header .container {
 }
 
 .nav-main .nav-link {
+    background: transparent;
+    border: 2px solid var(--white-5);
     color: var(--white-8);
-    text-decoration: none;
-    font-size: var(--font-base);
-    font-weight: 300;
-    transition: var(--transition-fast);
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-radius: var(--border-radius-small);
+    border-radius: var(--border-radius-pill);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-family: "Bitcount", sans-serif;
+    font-size: var(--font-sm);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: var(--transition-smooth);
+    backdrop-filter: blur(10px);
     position: relative;
-}
-
-.nav-main .nav-link::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 0;
-    height: 2px;
-    background: var(--rainbow-gradient);
-    transition: all 0.3s ease;
-    transform: translateX(-50%);
+    overflow: hidden;
+    text-decoration: none;
 }
 
 .nav-main .nav-link:hover,
 .nav-main .nav-link.active {
+    background: var(--white-1);
+    border-color: var(--white);
     color: var(--white);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
     text-decoration: none;
-}
-
-.nav-main .nav-link:hover::before,
-.nav-main .nav-link.active::before {
-    width: 100%;
 }
 
 /* ====== NAVIGATION MOBILE ====== */
@@ -133,22 +138,19 @@ main {
     font-size: clamp(2rem, 5vw, 3.5rem);
     font-weight: 300;
     margin-bottom: var(--spacing-lg);
-    background: var(--rainbow-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    background-size: 300% 300%;
-    animation: rainbow 3s ease infinite;
+    color: var(--white);
+    text-shadow: 0 0 20px var(--white-3);
 }
 
 .hero-subtitle {
     font-size: var(--font-lg);
-    color: var(--white-8);
+    color: var(--white);
     margin-bottom: var(--spacing-2xl);
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
     line-height: 1.6;
+    opacity: 0.9;
 }
 
 .hero-actions {
@@ -324,8 +326,10 @@ footer .container {
     border: 1px solid var(--white-2);
     border-radius: var(--border-radius);
     padding: var(--spacing-2xl);
-    max-width: 500px;
+    max-width: 1200px;
     width: 90%;
+    max-height: 95vh;
+    overflow-y: auto;
     z-index: var(--z-modal);
     transition: transform 0.3s ease;
 }

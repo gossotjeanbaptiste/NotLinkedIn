@@ -49,7 +49,7 @@ async function toggleJobDetails(adId) {
     const detailsDiv = document.getElementById(`details-${adId}`);
     const btn = document.querySelector(`[data-ad-id="${adId}"].learn-more-btn`);
 
-    if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
+    if (detailsDiv.classList.contains('hidden')) {
         // Show details
         try {
             btn.textContent = 'Chargement...';
@@ -63,20 +63,20 @@ async function toggleJobDetails(adId) {
             const adDetails = await response.json();
             displayJobDetails(detailsDiv, adDetails);
             
-            detailsDiv.style.display = 'block';
+            detailsDiv.classList.remove('hidden');
             btn.textContent = 'Masquer les détails';
             
         } catch (error) {
             console.error('Error fetching job details:', error);
             detailsDiv.innerHTML = '<p style="color: red;">Erreur lors du chargement des détails.</p>';
-            detailsDiv.style.display = 'block';
+            detailsDiv.classList.remove('hidden');
             btn.textContent = 'En savoir plus';
         } finally {
             btn.disabled = false;
         }
     } else {
         // Hide details
-        detailsDiv.style.display = 'none';
+        detailsDiv.classList.add('hidden');
         btn.textContent = 'En savoir plus';
     }
 }
@@ -180,7 +180,7 @@ function openApplicationModal(adId) {
     const adIdInput = document.getElementById('ad_id');
     
     adIdInput.value = adId;
-    modal.style.display = 'block';
+    modal.classList.remove('hidden');
     
     // Focus on first input
     const firstInput = modal.querySelector('input[type="text"], input[type="email"], textarea');
@@ -191,7 +191,7 @@ function openApplicationModal(adId) {
 
 function closeModal() {
     const modal = document.getElementById('applicationModal');
-    modal.style.display = 'none';
+    modal.classList.add('hidden');
     
     // Reset form
     const form = document.getElementById('applicationForm');

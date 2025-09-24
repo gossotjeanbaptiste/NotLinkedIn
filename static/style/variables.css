@@ -81,6 +81,7 @@
     --info-bg: var(--color-blue-70);
     
     /* ====== ESPACEMENT ====== */
+    --spacing-xxs: 0.125rem;  /* 2px */
     --spacing-xs: 0.25rem;    /* 4px */
     --spacing-sm: 0.5rem;     /* 8px */
     --spacing-md: 1rem;       /* 16px */

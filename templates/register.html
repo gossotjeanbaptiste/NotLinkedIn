@@ -11,18 +11,20 @@
     <header>
         <div class="container">
             <div class="header-logo">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+                </a>
             </div>
-            <nav>
-                <a href="{{ url_for('index') }}">Accueil</a>
+            <nav class="nav-main">
+                <a href="{{ url_for('index') }}" class="nav-link">Accueil</a>
                 {% if session.user_id %}
-                    <a href="{{ url_for('profile') }}">Mon Profil</a>
+                    <a href="{{ url_for('profile') }}" class="nav-link">Mon Profil</a>
                     {% if session.is_admin %}
-                        <a href="{{ url_for('admin') }}">Administration</a>
+                        <a href="{{ url_for('admin') }}" class="nav-link">Administration</a>
                     {% endif %}
-                    <a href="{{ url_for('logout') }}">Déconnexion</a>
+                    <a href="{{ url_for('logout') }}" class="nav-link">Déconnexion</a>
                 {% else %}
-                    <a href="{{ url_for('login') }}">Connexion</a>
+                    <a href="{{ url_for('login') }}" class="nav-link">Connexion</a>
                 {% endif %}
             </nav>
         </div>
@@ -47,14 +49,16 @@
             {% endwith %}
 
             <form method="POST" class="auth-form">
-                <div class="form-group">
-                    <label for="first_name" class="form-label">Prénom</label>
-                    <input type="text" id="first_name" name="first_name" class="form-control" placeholder="Votre prénom" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="surname" class="form-label">Nom</label>
-                    <input type="text" id="surname" name="surname" class="form-control" placeholder="Votre nom de famille" required>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="first_name" class="form-label">Prénom</label>
+                        <input type="text" id="first_name" name="first_name" class="form-control" placeholder="Votre prénom" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="surname" class="form-label">Nom</label>
+                        <input type="text" id="surname" name="surname" class="form-control" placeholder="Votre nom de famille" required>
+                    </div>
                 </div>
                 
                 <div class="form-group">
@@ -62,14 +66,16 @@
                     <input type="email" id="email" name="email" class="form-control" placeholder="votre@email.com" required>
                 </div>
                 
-                <div class="form-group">
-                    <label for="phone" class="form-label">Téléphone</label>
-                    <input type="tel" id="phone" name="phone" class="form-control" placeholder="0123456789">
-                </div>
-                
-                <div class="form-group">
-                    <label for="login" class="form-label">Nom d'utilisateur</label>
-                    <input type="text" id="login" name="login" class="form-control" placeholder="Votre nom d'utilisateur" required>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Téléphone</label>
+                        <input type="tel" id="phone" name="phone" class="form-control" placeholder="0123456789">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="login" class="form-label">Nom d'utilisateur</label>
+                        <input type="text" id="login" name="login" class="form-control" placeholder="Votre nom d'utilisateur" required>
+                    </div>
                 </div>
                 
                 <div class="form-group">
@@ -77,7 +83,7 @@
                     <input type="password" id="password" name="password" class="form-control" placeholder="Votre mot de passe sécurisé" required>
                 </div>
                 
-                <button type="submit" class="auth-submit">
+                <button type="submit" class="apply-btn">
                     S'inscrire
                 </button>
             </form>
