@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/login.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icon/NotLinkedIn_icon.ico') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+                <h1>Connexion</h1>
+            </div>
+            <nav>
+                <a href="{{ url_for('index') }}">Accueil</a>
+                {% if session.user_id %}
+                    <a href="{{ url_for('profile') }}">Mon Profil</a>
+                    <span>Bonjour {{ session.username }} !</span>
+                    {% if session.is_admin %}
+                        <a href="{{ url_for('admin') }}">Administration</a>
+                    {% endif %}
+                    <a href="{{ url_for('logout') }}">Déconnexion</a>
+                {% else %}
+                    <a href="{{ url_for('register') }}">Inscription</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="login-container">
+            <div class="login-card">
+                <h2 class="login-title">Connexion</h2>
+                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="login-alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST">
+                    <div class="form-group">
+                        <label for="login">Nom d'utilisateur:</label>
+                        <input type="text" id="login" name="login" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Mot de passe:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary login-btn">
+                        Se connecter
+                    </button>
+                </form>
+                
+                <p class="login-footer">
+                    Pas encore de compte ? 
+                    <a href="{{ url_for('register') }}" class="login-footer-link">Inscrivez-vous ici</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Job Board. Tous droits réservés.</p>
+        </div>
+    </footer>
+</body>
+</html>

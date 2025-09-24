@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/register.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icon/NotLinkedIn_icon.ico') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+                <h1>Inscription</h1>
+            </div>
+            <nav>
+                <a href="{{ url_for('index') }}">Accueil</a>
+                {% if session.user_id %}
+                    <a href="{{ url_for('profile') }}">Mon Profil</a>
+                    <span>Bonjour {{ session.username }} !</span>
+                    {% if session.is_admin %}
+                        <a href="{{ url_for('admin') }}">Administration</a>
+                    {% endif %}
+                    <a href="{{ url_for('logout') }}">Déconnexion</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Connexion</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="register-container">
+            <div class="register-card">
+                <h2 class="register-title">Inscription</h2>
+                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="register-alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST">
+                    <div class="form-group">
+                        <label for="first_name">Prénom:</label>
+                        <input type="text" id="first_name" name="first_name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="surname">Nom:</label>
+                        <input type="text" id="surname" name="surname" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Téléphone:</label>
+                        <input type="tel" id="phone" name="phone">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="login">Nom d'utilisateur:</label>
+                        <input type="text" id="login" name="login" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Mot de passe:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary register-btn">
+                        S'inscrire
+                    </button>
+                </form>
+                
+                <p class="register-footer">
+                    Déjà un compte ? 
+                    <a href="{{ url_for('login') }}" class="register-footer-link">Connectez-vous ici</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Job Board. Tous droits réservés.</p>
+        </div>
+    </footer>
+</body>
+</html>

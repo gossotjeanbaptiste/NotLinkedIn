@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/profile.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icon/NotLinkedIn_icon.ico') }}">
+    <script src="{{ url_for('static', filename='script/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='script/profile.js') }}"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+                <h1>Profile</h1>
+            </div>
+            <nav>
+                <a href="{{ url_for('index') }}">Accueil</a>
+                {% if session.user_id %}
+                    <a href="{{ url_for('profile') }}">Mon Profil</a>
+                    <span>Bonjour {{ session.username }} !</span>
+                    {% if session.is_admin %}
+                        <a href="{{ url_for('admin') }}">Administration</a>
+                    {% endif %}
+                    <a href="{{ url_for('logout') }}">Déconnexion</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Connexion</a>
+                    <a href="{{ url_for('register') }}">Inscription</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h2 class="profile-page-title">Mon Profil</h2>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="profile-container">
+            <!-- Section Informations personnelles -->
+            <div class="profile-section">
+                <h3 class="profile-section-title">
+                    Informations personnelles
+                    <button type="button" id="editProfileBtn" class="btn btn-secondary edit-profile-btn">
+                        ✏️ Modifier
+                    </button>
+                </h3>
+                
+                <!-- Vue lecture -->
+                <div id="profileView">
+                    <div class="profile-info">
+                        <label>Prénom :</label>
+                        <span>{{ user.first_name }}</span>
+                    </div>
+                    
+                    <div class="profile-info">
+                        <label>Nom :</label>
+                        <span>{{ user.surname }}</span>
+                    </div>
+                    
+                    <div class="profile-info">
+                        <label>Email :</label>
+                        <span>{{ user.email }}</span>
+                    </div>
+                    
+                    <div class="profile-info">
+                        <label>Téléphone :</label>
+                        <span>{{ user.phone if user.phone else 'Non renseigné' }}</span>
+                    </div>
+                    
+                    <div class="profile-info">
+                        <label>Adresse :</label>
+                        <span>{{ user.address if user.address else 'Non renseignée' }}</span>
+                    </div>
+                    
+                    <div class="profile-info">
+                        <label>Login :</label>
+                        <span>{{ user.login }}</span>
+                    </div>
+                    
+                    <div class="profile-info">
+                        <label>Membre depuis :</label>
+                        <span>{{ user.created_at.strftime('%d/%m/%Y') if user.created_at else 'N/A' }}</span>
+                    </div>
+                </div>
+                
+                <!-- Formulaire d'édition -->
+                <div id="profileEdit" class="profile-edit-form">
+                    <form method="POST" action="{{ url_for('update_profile') }}">
+                        <div class="form-group">
+                            <label for="first_name">Prénom :</label>
+                            <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="surname">Nom :</label>
+                            <input type="text" id="surname" name="surname" value="{{ user.surname }}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email :</label>
+                            <input type="email" id="email" name="email" value="{{ user.email }}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Téléphone :</label>
+                            <input type="tel" id="phone" name="phone" value="{{ user.phone if user.phone else '' }}" placeholder="Ex: 06 12 34 56 78">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="address">Adresse :</label>
+                            <textarea id="address" name="address" rows="3" placeholder="Votre adresse complète">{{ user.address if user.address else '' }}</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="login">Nom d'utilisateur :</label>
+                            <input type="text" id="login" name="login" value="{{ user.login }}" required>
+                        </div>
+                        
+                        <div class="profile-form-buttons">
+                            <button type="submit" class="btn btn-primary">
+                                💾 Sauvegarder
+                            </button>
+                            <button type="button" id="cancelEditBtn" class="btn btn-secondary profile-form-cancel-btn">
+                                ❌ Annuler
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Section Changement de mot de passe -->
+            <div class="profile-section">
+                <h3 class="profile-section-title">Changer le mot de passe</h3>
+                
+                <form method="POST" action="{{ url_for('change_password') }}" class="password-form">
+                    <div class="form-group">
+                        <label for="current_password">Mot de passe actuel :</label>
+                        <input type="password" id="current_password" name="current_password" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new_password">Nouveau mot de passe :</label>
+                        <input type="password" id="new_password" name="new_password" required minlength="6">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm_password">Confirmer le nouveau mot de passe :</label>
+                        <input type="password" id="confirm_password" name="confirm_password" required minlength="6">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        Modifier le mot de passe
+                    </button>
+                </form>
+            </div>
+
+            <!-- Section Gestion du compte -->
+            <div class="profile-section">
+                <h3 class="profile-section-title">Gestion du compte</h3>
+                
+                <div class="account-management">
+                    <div class="account-danger-zone">
+                        <h4 class="danger-zone-title">Zone dangereuse</h4>
+                        <p class="danger-zone-description">
+                            Une fois supprimé, votre compte et toutes vos données seront définitivement perdues.
+                        </p>
+                        <button type="button" id="deleteAccountBtn" class="btn btn-danger">
+                            🗑️ Supprimer mon compte
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Mes candidatures -->
+        <div class="profile-section profile-section-full-width">
+            <h3 class="profile-section-title">
+                Mes candidatures ({{ applications|length }})
+            </h3>
+            
+            {% if applications %}
+                <div class="applications-list">
+                    {% for app in applications %}
+                    <div class="application-card">
+                        <div class="application-header">
+                            <div class="application-left">
+                                <div class="application-title">{{ app.job_title }}</div>
+                                <div class="application-company">{{ app.company_name }}</div>
+                            </div>
+                            <span class="application-status status-{{ app.status }}">
+                                {% if app.status == 'pending' %}En attente
+                                {% elif app.status == 'reviewed' %}Examinée
+                                {% elif app.status == 'accepted' %}Acceptée
+                                {% elif app.status == 'rejected' %}Refusée
+                                {% else %}{{ app.status }}
+                                {% endif %}
+                            </span>
+                        </div>
+                        
+                        <div class="application-details">
+                            <div class="application-details-grid">
+                                <div>
+                                    <strong>📍 Lieu :</strong> {{ app.location }}
+                                </div>
+                                <div>
+                                    <strong>⏰ Type :</strong> {{ app.work_time|replace('_', ' ')|title }}
+                                </div>
+                                <div>
+                                    <strong>📅 Candidature :</strong> {{ app.application_date.strftime('%d/%m/%Y à %H:%M') }}
+                                </div>
+                                {% if app.company_website %}
+                                <div>
+                                    <strong>🌐 Site :</strong> 
+                                    <a href="{{ app.company_website }}" target="_blank" class="application-website-link">{{ app.company_website }}</a>
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            {% if app.message %}
+                            <div>
+                                <strong>💬 Mon message :</strong>
+                                <div class="application-message">{{ app.message }}</div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-applications">
+                    <div class="no-applications-icon">📋</div>
+                    <h4 class="no-applications-title">Aucune candidature pour le moment</h4>
+                    <p>Vous n'avez pas encore postulé à des offres d'emploi.</p>
+                    <a href="{{ url_for('index') }}" class="btn btn-primary no-applications-btn">
+                        Découvrir les offres
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Job Board. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

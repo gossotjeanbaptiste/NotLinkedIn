@@ -1,0 +1,369 @@
+/* Profile page styles */
+
+.profile-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.profile-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.profile-info {
+    margin-bottom: 1rem;
+}
+
+.profile-info label {
+    font-weight: 600;
+    color: #4a5568;
+    display: inline-block;
+    min-width: 120px;
+}
+
+.profile-info span {
+    color: #2d3748;
+}
+
+.applications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.application-card {
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 0.3s;
+}
+
+.application-card:hover {
+    border-color: #667eea;
+}
+
+.application-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.application-left {
+    flex: 1;
+}
+
+.application-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+}
+
+.application-company {
+    color: #667eea;
+    font-weight: 500;
+}
+
+.application-status {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    margin-left: 1rem;
+}
+
+.status-pending {
+    background-color: #fed7d7;
+    color: #c53030;
+}
+
+.status-reviewed {
+    background-color: #bee3f8;
+    color: #2c5282;
+}
+
+.status-accepted {
+    background-color: #c6f6d5;
+    color: #2f855a;
+}
+
+.status-rejected {
+    background-color: #fed7d7;
+    color: #c53030;
+}
+
+.application-details {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.application-message {
+    background-color: #f7fafc;
+    padding: 1rem;
+    border-radius: 4px;
+    border-left: 4px solid #667eea;
+    margin-top: 0.5rem;
+}
+
+.password-form {
+    margin-top: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d2d6dc;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.btn-primary {
+    background-color: #667eea;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #5a67d8;
+}
+
+.btn-secondary {
+    background-color: #a0aec0;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #718096;
+}
+
+/* Profile page specific styles */
+.profile-page-title {
+    margin-bottom: 1rem;
+}
+
+.profile-section-title {
+    margin-bottom: 1.5rem;
+    color: #2d3748;
+}
+
+.edit-profile-btn {
+    float: right;
+    font-size: 0.9rem;
+    padding: 0.3rem 0.8rem;
+}
+
+.profile-form-buttons {
+    margin-top: 1.5rem;
+}
+
+.profile-form-cancel-btn {
+    margin-left: 1rem;
+}
+
+.profile-section-full-width {
+    margin-top: 2rem;
+}
+
+.application-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.application-website-link {
+    color: #667eea;
+}
+
+.no-applications-container {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+}
+
+.no-applications-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.no-applications-title {
+    margin-bottom: 1rem;
+}
+
+.no-applications-link {
+    margin-top: 1rem;
+    text-decoration: none;
+}
+
+/* Alert styles */
+.alert {
+    margin-bottom: 1rem;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.alert-error {
+    background-color: #fed7d7;
+    color: #c53030;
+    border: 1px solid #feb2b2;
+}
+
+.alert-success {
+    background-color: #c6f6d5;
+    color: #2f855a;
+    border: 1px solid #9ae6b4;
+}
+
+.alert-info {
+    background-color: #bee3f8;
+    color: #2c5282;
+    border: 1px solid #90cdf4;
+}
+
+.application-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.application-website-link {
+    color: #667eea;
+}
+    .profile-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .application-details-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .edit-profile-btn {
+        float: none;
+        display: block;
+        margin-top: 1rem;
+    }
+}
+
+.application-message {
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-left: 4px solid #667eea;
+    margin-top: 0.5rem;
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+}
+
+.profile-edit-form {
+    display: none;
+}
+
+.no-applications {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+}
+
+.no-applications-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.no-applications-title {
+    margin-bottom: 1rem;
+}
+
+.no-applications-btn {
+    margin-top: 1rem;
+    text-decoration: none;
+}
+
+.application-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.application-website-link {
+    color: #667eea;
+}
+
+/* Account management styles */
+.account-management {
+    text-align: center;
+}
+
+.account-danger-zone {
+    background: #fef5e7;
+    border: 2px solid #f6ad55;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+}
+
+.danger-zone-title {
+    color: #c53030;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.danger-zone-description {
+    color: #744210;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.btn-danger {
+    background-color: #e53e3e;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-danger:hover {
+    background-color: #c53030;
+}
