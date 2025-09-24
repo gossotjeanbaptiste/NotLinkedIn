@@ -113,13 +113,20 @@ def register():
 
             cursor = connection.cursor()
             cursor.execute("""
-                INSERT INTO people (first_name, surname, email, phone, login, password) 
-                VALUES (%s, %s, %s, %s, %s, %s)
+                INSERT INTO people (first_name, surname, email, phone, address_street, 
+                                  address_postal_code, address_city, address_department, 
+                                  address_country, login, password) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """, (
                 request.form['first_name'],
                 request.form['surname'],
                 request.form['email'],
                 request.form.get('phone', ''),
+                request.form.get('address_street', ''),
+                request.form.get('address_postal_code', ''),
+                request.form.get('address_city', ''),
+                request.form.get('address_department', ''),
+                request.form.get('address_country', 'France'),
                 request.form['login'],
                 hash_password(request.form['password'])
             ))
@@ -319,7 +326,11 @@ def update_profile():
         surname = request.form['surname']
         email = request.form['email']
         phone = request.form.get('phone', '')
-        address = request.form.get('address', '')
+        address_street = request.form.get('address_street', '')
+        address_postal_code = request.form.get('address_postal_code', '')
+        address_city = request.form.get('address_city', '')
+        address_department = request.form.get('address_department', '')
+        address_country = request.form.get('address_country', 'France')
         login = request.form['login']
 
         # Validate email format
@@ -351,10 +362,12 @@ def update_profile():
         # Update user information
         cursor.execute("""
             UPDATE people SET 
-            first_name = %s, surname = %s, email = %s, 
-            phone = %s, address = %s, login = %s 
+            first_name = %s, surname = %s, email = %s, phone = %s, 
+            address_street = %s, address_postal_code = %s, address_city = %s, 
+            address_department = %s, address_country = %s, login = %s 
             WHERE id_people = %s
-        """, (first_name, surname, email, phone, address, login, session['user_id']))
+        """, (first_name, surname, email, phone, address_street, address_postal_code,
+              address_city, address_department, address_country, login, session['user_id']))
 
         connection.commit()
         cursor.close()

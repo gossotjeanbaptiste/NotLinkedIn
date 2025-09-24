@@ -19,7 +19,11 @@ CREATE TABLE people (
     surname VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     phone VARCHAR(20),
-    address VARCHAR(500),
+    address_street VARCHAR(255),
+    address_postal_code VARCHAR(10),
+    address_city VARCHAR(100),
+    address_department VARCHAR(100),
+    address_country VARCHAR(100) DEFAULT 'France',
     login VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     is_admin BOOLEAN DEFAULT FALSE,
@@ -68,6 +72,15 @@ INSERT INTO people (first_name, surname, email, phone, login, password, is_admin
 ('Admin', 'User', 'admin@jobboard.com', '0123456789', 'admin', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', TRUE),
 ('Jean', 'Dupont', 'jean.dupont@email.com', '0123456790', 'jdupont', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', FALSE),
 ('Marie', 'Martin', 'marie.martin@email.com', '0123456791', 'mmartin', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', FALSE);
+
+-- Migration script pour mettre à jour la structure existante (à exécuter si la DB existe déjà)
+-- ALTER TABLE people 
+-- DROP COLUMN address,
+-- ADD COLUMN address_street VARCHAR(255) AFTER phone,
+-- ADD COLUMN address_postal_code VARCHAR(10) AFTER address_street,
+-- ADD COLUMN address_city VARCHAR(100) AFTER address_postal_code,
+-- ADD COLUMN address_department VARCHAR(100) AFTER address_city,
+-- ADD COLUMN address_country VARCHAR(100) DEFAULT 'France' AFTER address_department;
 
 INSERT INTO advertisements (title, short_description, full_description, salary_min, salary_max, location, work_time, company_id, posted_by) VALUES
 ('Développeur Full-Stack', 'Rejoignez notre équipe pour développer des applications web modernes', 'Nous recherchons un développeur full-stack expérimenté pour rejoindre notre équipe dynamique. Vous travaillerez sur des projets innovants utilisant les dernières technologies web.', 35000, 45000, 'Paris', 'full-time', 1, 1),

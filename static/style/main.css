@@ -33,8 +33,3 @@
 
 /* ====== STYLES TEMPORAIRES POUR LA TRANSITION ====== */
 /* Ces styles seront progressivement déplacés dans les modules appropriés */
-
-/* Styles héritês de l'ancienne architecture qui seront migrés */
-.legacy-compatibility {
-    /* Placeholder pour assurer la compatibilité durant la migration */
-}
