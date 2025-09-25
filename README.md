@@ -2,6 +2,12 @@
 
 Ce projet est une plateforme web complète de recherche d'emploi développée avec **Python Flask** et **MySQL**. Elle permet aux entreprises de publier des offres d'emploi et aux candidats de postuler en ligne.
 
+## 🆕 Nouveautés
+
+- **Makefile** : simplifie l'installation et le lancement (`make run`, `make db`, `make install`, `make venv`).
+- **Script MySQL** : `create_mysql_user_sudo.sh` pour créer la base et l'utilisateur automatiquement.
+- **Structure enrichie** : nouveaux dossiers pour les styles CSS, scripts JS, icônes, images, etc.
+
 ## 🚀 Fonctionnalités
 
 ### Fonctionnalités principales (Steps 1-8)
@@ -74,61 +80,46 @@ Ce projet est une plateforme web complète de recherche d'emploi développée av
 
 ```bash
 git clone <repository-url>
-cd not_linkedin
+cd NotLinkedIn
 ```
 
-### 2. Créer un environnement virtuel
+
+### 2. Installation rapide avec Makefile
 
 ```bash
-python -m venv venv
-# Sur Windows
-venv\Scripts\activate
-# Sur Linux/Mac
-source venv/bin/activate
-source venv/bin/activate
+make venv      # Crée l'environnement virtuel
+make install   # Installe les dépendances
+make db        # Crée la base et l'utilisateur MySQL automatiquement
+make run       # Lance l'application Flask
 ```
-
-### 3. Installer les dépendances
+Ou alors
 
 ```bash
-pip install -r requirements.txt
-```
-
-### 4. Configuration de la base de données
-
-**a) Créer la base de données MySQL :**
-
-```bash
-mysql -u root -p
-```
-
-**b) Exécuter le script SQL :**
-
-```sql
-source database.sql
-```
-
-Ou via un client MySQL, exécuter le contenu du fichier `database.sql`.
-
-**c) Configurer la connexion dans `app.py` :**
-
-```python
-DB_CONFIG = {
-    'host': 'localhost',
-    'database': 'job_board',
-    'user': 'votre_utilisateur_mysql',
-    'password': 'votre_mot_de_passe_mysql',
-    'charset': 'utf8mb4'
-}
-```
-
-### 5. Lancer l'application
-
-```bash
-python app.py
+make           # Tout faire en une seule commande
 ```
 
 L'application sera disponible sur `http://localhost:5000`
+
+### 3. Installation manuelle (optionnel)
+
+1. Créez l'environnement virtuel :
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    ```
+2. Installez les dépendances :
+    ```bash
+    pip install -r requirements.txt
+    ```
+3. Créez la base et l'utilisateur MySQL :
+    ```bash
+    bash create_mysql_user_sudo.sh
+    ```
+4. Si besoin, exécutez le script SQL :
+    ```bash
+    mysql -u jobboard -p job_board < database.sql
+    ```
+5. Configurez la connexion dans `app.py` si nécessaire.
 
 ## 👤 Comptes de test
 
@@ -152,24 +143,47 @@ Les comptes suivants sont créés automatiquement :
 
 ## 🏗️ Structure du projet
 
-``` text
-not_linkedin/
-├── app.py                 # Application Flask principale
-├── database.sql          # Script de création de la base de données
-├── requirements.txt      # Dépendances Python
-├── README.md            # Documentation
-├── templates/           # Templates HTML Jinja2
-│   ├── index.html      # Page d'accueil
-│   ├── login.html      # Page de connexion
-│   ├── register.html   # Page d'inscription
-│   └── admin.html      # Interface d'administration
-└── static/             # Fichiers statiques
-    ├── style/
-    │   └── style.css   # Feuilles de style
-    ├── script/
-    │   └── script.js   # JavaScript client
-    └── icon/
-        └── icon.ico    # Favicon
+
+```text
+NotLinkedIn/
+├── app.py                      # Application Flask principale
+├── database.sql                # Script de création de la base de données
+├── requirements.txt            # Dépendances Python
+├── README.md                   # Documentation
+├── Makefile                    # Automatisation installation/lancement
+├── create_mysql_user_sudo.sh   # Script création base/utilisateur MySQL
+├── templates/                  # Templates HTML Jinja2
+│   ├── index.html
+│   ├── login.html
+│   ├── register.html
+│   ├── profile.html
+│   └── admin.html
+├── static/
+│   ├── style/                  # Feuilles de style CSS
+│   ├── style/                  # Feuilles de style CSS
++│   │   ├── admin.css
+│   │   ├── auth.css
+│   │   ├── base.css
+│   │   ├── components.css
+│   │   ├── home.css
+│   │   ├── layout.css
+│   │   ├── login.css
+│   │   ├── main.css
+│   │   ├── profile.css
+│   │   ├── register.css
+│   │   ├── responsive.css
+│   │   ├── variables.css
+│   ├── script/                 # Scripts JS
+│   │   ├── script.js
+│   │   ├── profile.js
+│   │   ├── admin.js
+│   ├── icon/                   # Icônes
+│   │   └── NotLinkedIn_icon.ico
+│   ├── images/                 # Images
+│   │   └── logo.png
+│   ├── fonts/                  # Polices
+│   │   └── BitcountPropSingle-Light.ttf
+└── __pycache__/
 ```
 
 ## 🔌 API Endpoints
@@ -207,8 +221,8 @@ not_linkedin/
 
 ### Tables principales
 
-**companies** - Informations sur les entreprises
 
+**companies**
 - id_company
 - name
 - address
@@ -216,20 +230,23 @@ not_linkedin/
 - website
 - created_at
 
-**people** - Utilisateurs et candidats
-
+**people**
 - id_people
 - first_name
 - surname
 - email
 - phone
+- address_street
+- address_postal_code
+- address_city
+- address_department
+- address_country
 - login
 - password
 - is_admin
 - created_at
 
-**advertisements** - Offres d'emploi
-
+**advertisements**
 - id_ad
 - title
 - short_description
@@ -237,21 +254,20 @@ not_linkedin/
 - salary_min
 - salary_max
 - location
-- work_time
+- work_time (full-time, part-time, contract, internship)
 - company_id
 - posted_by
 - created_at
 - updated_at
 - is_active
 
-**job_applications** - Candidatures
-
+**job_applications**
 - id_application
 - id_ad
 - id_people
 - message
 - application_date
-- status
+- status (pending, reviewed, accepted, rejected)
 
 ## 🔒 Sécurité
 
