@@ -93,7 +93,7 @@
 
 .auth-form .form-control {
     width: 100%;
-    padding: var(--spacing-md) var(--spacing-md) calc(var(--spacing-md) + 8px);
+    padding: 14px 16px 14px 8px;
     background: var(--white-08);
     backdrop-filter: blur(10px);
     border: 2px solid var(--white-2);
@@ -101,11 +101,13 @@
     color: var(--white);
     font-family: "Bitcount", sans-serif;
     font-size: var(--font-base);
-    line-height: 1.6;
-    min-height: 60px;
+    line-height: 1.2;
+    height: 50px;
     transition: var(--transition-smooth);
     box-sizing: border-box;
     overflow: visible;
+    display: block;
+    text-indent: 10px;
 }
 
 .auth-form .form-control::placeholder {
@@ -123,7 +125,12 @@
 .auth-form textarea.form-control {
     resize: vertical;
     min-height: 120px;
+    height: auto;
     font-family: "Bitcount", sans-serif;
+    display: block;
+    line-height: 1.6;
+    padding: var(--spacing-md);
+    text-indent: 0;
 }
 
 .auth-form .apply-btn + .learn-more-btn {

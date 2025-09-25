@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash
-import mysql.connector
-from mysql.connector import Error
-import os
-from datetime import datetime
 import hashlib
+from datetime import datetime
+import os
+from mysql.connector import Error
+import mysql.connector
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'  # Change this in production
@@ -32,7 +32,57 @@ def hash_password(password):
     """Hash password using SHA-256"""
     return hashlib.sha256(password.encode()).hexdigest()
 
+
+def get_db_connection():
+    """Get database connection"""
+    try:
+        connection = mysql.connector.connect(**DB_CONFIG)
+        return connection
+    except Error as e:
+        print(f"Error connecting to MySQL: {e}")
+        return None
+
+
+def hash_password(password):
+    """Hash password using SHA-256"""
+    return hashlib.sha256(password.encode()).hexdigest()
+
 # ============= MAIN PAGES =============
+
+
+@app.route("/api/applications/<int:id_application>", methods=["DELETE", "PUT"])
+def application_update_delete(id_application):
+    if not session.get('user_id'):
+        return jsonify({"error": "Non authentifié"}), 403
+    connection = get_db_connection()
+    if connection is None:
+        return jsonify({"error": "Erreur de connexion à la base de données"}), 500
+    cursor = connection.cursor()
+    try:
+        # Vérifier que la candidature appartient bien à l'utilisateur
+        cursor.execute(
+            "SELECT id_people FROM job_applications WHERE id_application = %s", (id_application,))
+        result = cursor.fetchone()
+        if not result or result[0] != session['user_id']:
+            return jsonify({"error": "Accès refusé"}), 403
+        if request.method == "DELETE":
+            cursor.execute(
+                "DELETE FROM job_applications WHERE id_application = %s", (id_application,))
+            connection.commit()
+            return jsonify({"success": True})
+        elif request.method == "PUT":
+            data = request.get_json()
+            message = data.get('message', '')
+            cursor.execute(
+                "UPDATE job_applications SET message = %s WHERE id_application = %s", (message, id_application))
+            connection.commit()
+            return jsonify({"success": True})
+    except Exception as e:
+        print(f"Error update/delete application: {e}")
+        return jsonify({"error": "Erreur serveur"}), 500
+    finally:
+        cursor.close()
+        connection.close()
 
 
 @app.route("/")
@@ -537,9 +587,13 @@ def company_crud(company_id):
     try:
         if request.method == 'GET':
             cursor.execute(
-                "SELECT * FROM companies WHERE id_company = %s", (company_id,))
+                "SELECT id_company, name, address, description, website FROM companies WHERE id_company = %s", (company_id,))
             company = cursor.fetchone()
-            return jsonify(company) if company else jsonify({"error": "Not found"}), 404
+
+            if company:
+                return jsonify(company)
+            else:
+                return jsonify({"error": "Not found"}), 404
 
         elif request.method == 'PUT':
             data = request.json
@@ -557,7 +611,7 @@ def company_crud(company_id):
             connection.commit()
             return jsonify({"success": True})
 
-    except Error as e:
+    except Exception as e:
         print(f"Error in company CRUD: {e}")
         return jsonify({"error": "Database error"}), 500
     finally:
@@ -609,16 +663,20 @@ def advertisements_crud():
                 return jsonify({"error": "Accès refusé"}), 403
 
             data = request.json
+            salary_min = data.get('salary_min')
+            salary_max = data.get('salary_max')
+
             cursor.execute("""
                 INSERT INTO advertisements (title, short_description, full_description, 
                                          salary_min, salary_max, location, work_time, 
                                          company_id, posted_by) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
             """, (
-                data['title'], data['short_description'], data['full_description'],
-                data.get('salary_min'), data.get(
-                    'salary_max'), data['location'],
-                data['work_time'], data['company_id'], session['user_id']
+                data['title'], data.get('short_description', '')[
+                    :500], data.get('full_description', ''),
+                salary_min, salary_max, data.get('location'),
+                data.get(
+                    'contract_type'), data['company_id'], session['user_id']
             ))
             connection.commit()
             return jsonify({"success": True, "id": cursor.lastrowid})
@@ -631,7 +689,7 @@ def advertisements_crud():
         connection.close()
 
 
-@app.route("/api/advertisements/<int:ad_id>", methods=['PUT', 'DELETE'])
+@app.route("/api/advertisements/<int:ad_id>", methods=['GET', 'PUT', 'DELETE'])
 def advertisement_crud(ad_id):
     if not session.get('is_admin'):
         return jsonify({"error": "Accès refusé"}), 403
@@ -640,23 +698,47 @@ def advertisement_crud(ad_id):
     if connection is None:
         return jsonify({"error": "Database connection error"}), 500
 
-    cursor = connection.cursor()
+    cursor = connection.cursor(dictionary=True)
 
     try:
-        if request.method == 'PUT':
+        if request.method == 'GET':
+            cursor.execute("""
+                SELECT id_ad, title, short_description, full_description, location, 
+                       salary_min, salary_max, work_time, company_id 
+                FROM advertisements WHERE id_ad = %s
+            """, (ad_id,))
+            advertisement = cursor.fetchone()
+
+            if advertisement:
+                # Combiner les descriptions et convertir work_time pour l'interface
+                result = {
+                    'id_ad': advertisement['id_ad'],
+                    'title': advertisement['title'],
+                    'description': advertisement['full_description'] or advertisement['short_description'] or '',
+                    'location': advertisement['location'],
+                    'salary': f"{advertisement['salary_min'] or ''}{' - ' + str(advertisement['salary_max']) if advertisement['salary_max'] else ''}".strip(' - '),
+                    'contract_type': advertisement['work_time'],
+                    'company_id': advertisement['company_id']
+                }
+                return jsonify(result)
+            else:
+                return jsonify({"error": "Not found"}), 404
+
+        elif request.method == 'PUT':
             data = request.json
+            salary_min = data.get('salary_min')
+            salary_max = data.get('salary_max')
+
             cursor.execute("""
                 UPDATE advertisements 
-                SET title = %s, short_description = %s, full_description = %s, 
-                    salary_min = %s, salary_max = %s, location = %s, work_time = %s, 
-                    company_id = %s, is_active = %s
+                SET title = %s, full_description = %s, location = %s, 
+                    salary_min = %s, salary_max = %s, work_time = %s, company_id = %s
                 WHERE id_ad = %s
             """, (
-                data['title'], data['short_description'], data['full_description'],
-                data.get('salary_min'), data.get(
-                    'salary_max'), data['location'],
-                data['work_time'], data['company_id'], data.get(
-                    'is_active', True), ad_id
+                data['title'], data.get(
+                    'full_description', ''), data.get('location'),
+                salary_min, salary_max, data.get('contract_type'),
+                data['company_id'], ad_id
             ))
             connection.commit()
             return jsonify({"success": True})

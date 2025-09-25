@@ -239,13 +239,29 @@
                                     </div>
                                     {% endif %}
                                 </div>
-                                
                                 {% if app.message %}
                                 <div>
                                     <strong>💬 Mon message :</strong>
                                     <div class="application-message">{{ app.message }}</div>
+                                    <!-- Modal édition candidature -->
+                                    <div class="application-edit-modal modal-glass" style="display:none;">
+                                        <div class="modal-content">
+                                            <span class="close-modal" style="float:right;cursor:pointer;font-size:1.5em;">&times;</span>
+                                            <h3>Modifier votre candidature</h3>
+                                            <label for="edit-message-input">Message de motivation</label>
+                                            <textarea class="edit-message-input" rows="4" style="width:100%;margin-bottom:12px;"></textarea>
+                                            <div style="display:flex;gap:12px;">
+                                                <button type="button" class="btn btn-primary btn-save-edit">Enregistrer</button>
+                                                <button type="button" class="btn btn-secondary btn-cancel-edit">Annuler</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 {% endif %}
+                                <div class="application-actions">
+                                    <button class="btn btn-edit" data-app-id="{{ app.id_application }}" onclick="editApplication(this)">Modifier</button>
+                                    <button class="btn btn-danger" data-app-id="{{ app.id_application }}" onclick="deleteApplication(this)">Supprimer</button>
+                                </div>
                             </div>
                         </div>
                         {% endfor %}

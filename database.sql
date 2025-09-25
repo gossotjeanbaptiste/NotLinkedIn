@@ -64,14 +64,20 @@ CREATE TABLE job_applications (
 
 -- Insert sample data
 INSERT INTO companies (name, address, description, website) VALUES
-('TechCorp', '123 rue de la Tech, Paris', 'Entreprise leader dans les nouvelles technologies', 'www.techcorp.com'),
-('WebAgency', '456 avenue du Web, Lyon', 'Agence spécialisée dans le développement web', 'www.webagency.fr'),
-('StartupX', '789 boulevard Innovation, Marseille', 'Startup innovante dans l\'IA', 'www.startupx.io');
+('TechCorp', '123 rue de la Tech, Paris', 'Entreprise leader dans les nouvelles technologies', 'https://www.techcorp.com'),
+('WebAgency', '456 avenue du Web, Lyon', 'Agence spécialisée dans le développement web', 'https://www.webagency.fr'),
+('StartupX', '789 boulevard Innovation, Marseille', 'Startup innovante dans l\'IA', 'https://www.startupx.io'),
+('FinancePlus', '800 avenue de la Bourse, Paris', 'Cabinet de conseil en finance et audit', 'https://www.financeplus.fr'),
+('GreenEnergy', '90 rue de l\'Énergie Verte, Nantes', 'Producteur d\'énergie renouvelable', 'https://www.green-energy.com');
+-- Les ID de ces nouvelles entreprises seront probablement 4 et 5.
 
 INSERT INTO people (first_name, surname, email, phone, login, password, is_admin) VALUES
 ('Admin', 'User', 'admin@jobboard.com', '0123456789', 'admin', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', TRUE),
 ('Jean', 'Dupont', 'jean.dupont@email.com', '0123456790', 'jdupont', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', FALSE),
-('Marie', 'Martin', 'marie.martin@email.com', '0123456791', 'mmartin', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', FALSE);
+('Marie', 'Martin', 'marie.martin@email.com', '0123456791', 'mmartin', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', FALSE),
+('Antoine', 'Leroy', 'antoine.leroy@financeplus.com', '0123456792', 'aleroy', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', FALSE),
+('Lucie', 'Petit', 'lucie.petit@email.com', '0123456793', 'lpetit', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', FALSE),
+('David', 'Roux', 'david.roux@email.com', '0123456794', 'droux', 'ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f', FALSE);
 
 -- Migration script pour mettre à jour la structure existante (à exécuter si la DB existe déjà)
 -- ALTER TABLE people 
@@ -85,4 +91,15 @@ INSERT INTO people (first_name, surname, email, phone, login, password, is_admin
 INSERT INTO advertisements (title, short_description, full_description, salary_min, salary_max, location, work_time, company_id, posted_by) VALUES
 ('Développeur Full-Stack', 'Rejoignez notre équipe pour développer des applications web modernes', 'Nous recherchons un développeur full-stack expérimenté pour rejoindre notre équipe dynamique. Vous travaillerez sur des projets innovants utilisant les dernières technologies web.', 35000, 45000, 'Paris', 'full-time', 1, 1),
 ('Designer UX/UI', 'Créez des expériences utilisateur exceptionnelles', 'Poste de designer UX/UI pour concevoir et améliorer l\'expérience utilisateur de nos applications. Vous collaborerez étroitement avec l\'équipe de développement.', 30000, 40000, 'Lyon', 'full-time', 2, 1),
-('Stagiaire Développeur Web', 'Stage de 6 mois dans une startup innovante', 'Opportunité de stage dans une startup spécialisée dans l\'intelligence artificielle. Vous participerez au développement de notre plateforme web.', 600, 1000, 'Marseille', 'internship', 3, 1);
+('Stagiaire Développeur Web', 'Stage de 6 mois dans une startup innovante', 'Opportunité de stage dans une startup spécialisée dans l\'intelligence artificielle. Vous participerez au développement de notre plateforme web.', 600, 1000, 'Marseille', 'internship', 3, 1),
+('Consultant Junior en Audit', 'Poste junior en audit financier pour jeunes diplômés', 'Nous recherchons un Consultant Junior motivé pour rejoindre notre équipe d\'audit. Formation et accompagnement assurés. Déplacements possibles.', 32000, 38000, 'Paris', 'full-time', 4, 4),
+('Assistante Administrative', 'Support administratif et gestion de bureau', 'Vous assurerez le support administratif de l\'équipe et la gestion quotidienne des locaux. Maîtrise des outils bureautiques essentielle.', 25000, 30000, 'Paris', 'full-time', 4, 4),
+('Ingénieur en Énergies Renouvelables', 'Conception et suivi de projets éoliens et solaires', 'Rejoignez-nous pour concevoir et superviser l\'installation de nos nouveaux parcs énergétiques. Une passion pour la transition énergétique est indispensable.', 45000, 60000, 'Nantes', 'full-time', 5, 1),
+('Développeur Mobile (React Native)', 'Contrat de 6 mois pour développement d\'application', 'Nous cherchons un expert React Native pour un contrat de 6 mois afin de finaliser notre nouvelle application mobile.', 500, 600, 'Toulouse', 'contract', 1, 1);
+
+
+INSERT INTO job_applications (id_ad, id_people, message, status) VALUES
+(1, 5, 'Je suis très intéressée par le poste de Développeur Full-Stack et j\'ai 3 ans d\'expérience dans les technologies mentionnées.', 'reviewed'),
+(6, 5, 'Mon profil correspond parfaitement à l\'offre d\'Ingénieur en Énergies Renouvelables.', 'pending'),
+(4, 6, 'Jeune diplômé d\'école de commerce, je suis très motivé par le poste de Consultant Junior en Audit.', 'accepted'),
+(2, 2, 'Candidature pour le poste de Designer UX/UI. Veuillez trouver mon portfolio en pièce jointe.', 'rejected');

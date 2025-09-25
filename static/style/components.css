@@ -1,3 +1,73 @@
+select option {
+    background: #2F718A;
+    color: var(--white);
+    font-family: "Bitcount", sans-serif;
+    font-size: var(--font-sm);
+    font-weight: 400;
+    border-radius: var(--border-radius-pill);
+    padding: var(--spacing-sm) var(--spacing-lg);
+}
+
+select {
+    background: rgba(255,255,255,0.15);
+    color: var(--white);
+    border: 2px solid var(--white);
+    border-radius: var(--border-radius-pill);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-family: "Bitcount", sans-serif;
+    font-size: var(--font-sm);
+    font-weight: 400;
+    transition: var(--transition-smooth);
+    backdrop-filter: blur(10px);
+    outline: none;
+}
+
+select:focus {
+    border-color: var(--white-5);
+    box-shadow: 0 0 20px var(--white-3), 0 2px 8px var(--white-5);
+}
+.btn-success, .btn-secondary {
+    border: 2px solid var(--white) !important;
+    color: var(--white) !important;
+}
+.btn-success:hover,
+.btn-success:active,
+.btn-secondary:hover,
+.btn-secondary:active {
+    box-shadow: 0 0 20px var(--white-3), 0 2px 8px var(--white-5);
+}
+.btn-success, .btn-secondary {
+    border: 2px solid var(--white-5) !important;
+}
+.btn-success, .btn-secondary {
+    background: transparent;
+    border: 2px solid var(--white-5);
+    color: var(--white-8);
+    border-radius: var(--border-radius-pill);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-family: "Bitcount", sans-serif;
+    font-size: var(--font-sm);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: var(--transition-smooth);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+}
+
+.btn-success:hover,
+.btn-success:active,
+.btn-secondary:hover,
+.btn-secondary:active {
+    background: var(--white-1);
+    border-color: var(--white);
+    color: var(--white);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;
+}
 /* ================== COMPOSANTS - PORTFOLIO STYLE ================== */
 /* Composants adaptés du portfolio avec effets glass morphism et animations */
 
@@ -111,35 +181,34 @@
 }
 
 .btn-primary {
-    background: var(--rainbow-gradient);
-    background-size: 300% 300%;
-    animation: rainbow 3s ease infinite;
-    border: 2px solid transparent;
-    color: var(--white);
-    font-weight: bold;
-    box-shadow: var(--shadow-md);
-}
-
-.btn-primary::before {
-    background: var(--white-1);
+    background: transparent;
+    border: 2px solid var(--white-5);
+    color: var(--white-8);
+    border-radius: var(--border-radius-pill);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-family: "Bitcount", sans-serif;
+    font-size: var(--font-sm);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: var(--transition-smooth);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-block;
 }
 
 .btn-primary:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-xl);
-    animation-duration: 1s;
+    background: var(--white-1);
+    border-color: var(--white);
+    color: var(--white);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;
 }
 
-.btn-secondary {
-    background: var(--white-2);
-    border: 2px solid var(--white-3);
-    backdrop-filter: blur(15px);
-}
-
-.btn-secondary:hover {
-    background: var(--white-3);
-    border-color: var(--white-5);
-}
 
 .btn-outline {
     background: transparent;
@@ -226,10 +295,6 @@
     transform: translateY(0) !important;
 }
 
-.btn-success {
-    background: var(--success-bg);
-    border-color: var(--success);
-}
 
 .btn-warning {
     background: var(--warning-bg);
@@ -518,17 +583,6 @@
     margin-bottom: 30px;
     text-align: center;
     position: relative;
-}
-
-.section-title::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 50px;
-    height: 2px;
-    background: var(--rainbow-gradient);
 }
 
 /* ====== UTILITAIRES ====== */

@@ -1,3 +1,69 @@
+// Suppression d'une candidature
+window.deleteApplication = function(btn) {
+    const appId = btn.getAttribute('data-app-id');
+    if (!appId) return;
+    if (!confirm('Voulez-vous vraiment supprimer cette candidature ?')) return;
+    fetch(`/api/applications/${appId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(res => {
+        if (res.ok) {
+            btn.closest('.application-card').remove();
+            alert('Candidature supprimée !');
+        } else {
+            alert('Erreur lors de la suppression.');
+        }
+    });
+}
+
+// Modification d'une candidature (affiche un prompt pour le message)
+window.editApplication = function(btn) {
+    const appId = btn.getAttribute('data-app-id');
+    if (!appId) return;
+    const card = btn.closest('.application-card');
+    const messageDiv = card.querySelector('.application-message');
+    const modal = card.querySelector('.application-edit-modal');
+    if (!modal || !messageDiv) return;
+    // Forcer l'affichage de la modal (évite display:none persistant)
+    modal.style.display = 'block';
+    modal.style.visibility = 'visible';
+    modal.style.opacity = '1';
+    document.body.classList.add('modal-open');
+    // Préremplit le textarea (fallback si vide)
+    const textarea = modal.querySelector('.edit-message-input');
+    textarea.value = messageDiv.textContent || textarea.value || '';
+    textarea.focus();
+    // Fermer la modal (croix ou Annuler)
+    const closeBtn = modal.querySelector('.close-modal');
+    const cancelBtn = modal.querySelector('.btn-cancel-edit');
+    function closeModal() {
+        modal.style.display = 'none';
+        document.body.classList.remove('modal-open');
+    }
+    closeBtn.onclick = closeModal;
+    cancelBtn.onclick = closeModal;
+    // Valider la modification
+    const saveBtn = modal.querySelector('.btn-save-edit');
+    saveBtn.onclick = function(e) {
+        e.preventDefault();
+        const newMessage = textarea.value;
+        fetch(`/api/applications/${appId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: newMessage })
+        })
+        .then(res => {
+            if (res.ok) {
+                messageDiv.textContent = newMessage;
+                closeModal();
+                alert('Message modifié !');
+            } else {
+                alert('Erreur lors de la modification.');
+            }
+        });
+    };
+}
 // Profile page JavaScript functionality
 
 document.addEventListener('DOMContentLoaded', function() {
