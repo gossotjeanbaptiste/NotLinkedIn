@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Entreprise - NotLinkedIn</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/main.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icon/NotLinkedIn_icon.ico') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-logo">
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+                </a>
+            </div>
+            <nav class="nav-main">
+                <a href="{{ url_for('index') }}" class="nav-link">Accueil</a>
+                {% if session.user_id %}
+                    <a href="{{ url_for('profile') }}" class="nav-link">Mon Profil</a>
+                    <a href="{{ url_for('entreprise') }}" class="nav-link active">Mon Entreprise</a>
+                    {% if session.is_admin %}
+                        <a href="{{ url_for('admin') }}" class="nav-link">Administration</a>
+                    {% endif %}
+                    <a href="{{ url_for('logout') }}" class="nav-link">Déconnexion</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="nav-link">Connexion</a>
+                    <a href="{{ url_for('register') }}" class="nav-link">Inscription</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="profile-container">
+            <!-- Section Mon Entreprise -->
+            <div class="profile-section profile-section-full-width">
+                <h2 class="profile-section-title">
+                    🏢 Mon Entreprise
+                    {% if not user.id_company %}
+                        <button type="button" id="createCompanyBtn" class="btn btn-primary">
+                            ➕ Créer mon entreprise
+                        </button>
+                    {% endif %}
+                </h2>
+                
+                {% if user.id_company %}
+                    <!-- L'utilisateur possède déjà une entreprise -->
+                    <div class="company-info">
+                        <div class="company-header">
+                            <h3>{{ user.company_name }}</h3>
+                            <div class="company-actions">
+                                <button type="button" id="editCompanyBtn" class="btn btn-secondary">
+                                    ✏️ Modifier
+                                </button>
+                                <button type="button" id="deleteCompanyBtn" class="btn btn-danger">
+                                    🗑️ Supprimer
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="companyView">
+                            <div class="company-details">
+                                <div class="company-detail">
+                                    <strong>📍 Adresse :</strong> {{ user.company_address or 'Non renseignée' }}
+                                </div>
+                                <div class="company-detail">
+                                    <strong>📝 Description :</strong> {{ user.company_description or 'Aucune description' }}
+                                </div>
+                                <div class="company-detail">
+                                    <strong>🌐 Site web :</strong> 
+                                    {% if user.company_website %}
+                                        <a href="{{ user.company_website }}" target="_blank">{{ user.company_website }}</a>
+                                    {% else %}
+                                        Non renseigné
+                                    {% endif %}
+                                </div>
+                                <div class="company-detail">
+                                    <strong>🏭 Secteur :</strong> {{ user.company_sector or 'Non renseigné' }}
+                                </div>
+                                <div class="company-detail">
+                                    <strong>👥 Taille :</strong> 
+                                    {% if user.company_size %}
+                                        {{ user.company_size }} employé{{ 's' if user.company_size != '1' else '' }}
+                                    {% else %}
+                                        Non renseignée
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Formulaire d'édition de l'entreprise -->
+                        <div id="companyEdit" class="company-edit-form" style="display: none;">
+                            <form id="companyForm">
+                                <div class="form-group">
+                                    <label for="company_name" class="form-label">Nom de l'entreprise :</label>
+                                    <input type="text" id="company_name" name="name" class="form-control" value="{{ user.company_name }}">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="company_address" class="form-label">Adresse :</label>
+                                    <input type="text" id="company_address" name="address" class="form-control" value="{{ user.company_address or '' }}" placeholder="123 rue de l'Entreprise, Paris">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="company_description" class="form-label">Description :</label>
+                                    <textarea id="company_description" name="description" class="form-control" rows="4" placeholder="Décrivez votre entreprise...">{{ user.company_description or '' }}</textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="company_website" class="form-label">Site web :</label>
+                                    <input type="url" id="company_website" name="website" class="form-control" value="{{ user.company_website or '' }}" placeholder="https://www.monentreprise.com">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="company_sector" class="form-label">Secteur d'activité :</label>
+                                    <select id="company_sector" name="sector" class="form-control">
+                                        <option value="">Choisir un secteur</option>
+                                        <option value="Technologie" {% if user.company_sector == 'Technologie' %}selected{% endif %}>Technologie</option>
+                                        <option value="Finance" {% if user.company_sector == 'Finance' %}selected{% endif %}>Finance</option>
+                                        <option value="Santé" {% if user.company_sector == 'Santé' %}selected{% endif %}>Santé</option>
+                                        <option value="Éducation" {% if user.company_sector == 'Éducation' %}selected{% endif %}>Éducation</option>
+                                        <option value="Commerce" {% if user.company_sector == 'Commerce' %}selected{% endif %}>Commerce</option>
+                                        <option value="Industrie" {% if user.company_sector == 'Industrie' %}selected{% endif %}>Industrie</option>
+                                        <option value="Services" {% if user.company_sector == 'Services' %}selected{% endif %}>Services</option>
+                                        <option value="Autre" {% if user.company_sector == 'Autre' %}selected{% endif %}>Autre</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="company_size" class="form-label">Taille de l'entreprise :</label>
+                                    <select id="company_size" name="company_size" class="form-control">
+                                        <option value="">Choisir une taille</option>
+                                        <option value="1-10" {% if user.company_size == '1-10' %}selected{% endif %}>1-10 employés</option>
+                                        <option value="11-50" {% if user.company_size == '11-50' %}selected{% endif %}>11-50 employés</option>
+                                        <option value="51-200" {% if user.company_size == '51-200' %}selected{% endif %}>51-200 employés</option>
+                                        <option value="201-1000" {% if user.company_size == '201-1000' %}selected{% endif %}>201-1000 employés</option>
+                                        <option value="1000+" {% if user.company_size == '1000+' %}selected{% endif %}>1000+ employés</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="profile-form-buttons">
+                                    <button type="submit" class="btn-profile-save">
+                                        💾 Sauvegarder
+                                    </button>
+                                    <button type="button" id="cancelCompanyEditBtn" class="btn-profile-cancel">
+                                        ❌ Annuler
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Section Gestion des offres d'emploi -->
+                    <div class="company-jobs-section">
+                        <h4 class="jobs-section-title">
+                            📋 Mes offres d'emploi ({{ company_jobs|length }})
+                            <a href="{{ url_for('ajouter_offre') }}" class="btn btn-primary">
+                                ➕ Créer une offre
+                            </a>
+                        </h4>
+                        
+                        {% if company_jobs %}
+                            <div class="jobs-list">
+                                {% for job in company_jobs %}
+                                <div class="job-card">
+                                    <div class="job-header">
+                                        <div class="job-left">
+                                            <div class="job-title">{{ job.title }}</div>
+                                            <div class="job-location">📍 {{ job.location }}</div>
+                                        </div>
+                                        <div class="job-right">
+                                            <span class="job-applications-count">{{ job.applications_count }} candidature{{ 's' if job.applications_count != 1 else '' }}</span>
+                                            <div class="job-actions">
+                                                <button class="btn btn-sm btn-secondary" onclick="viewJobApplications('{{ job.id_ad }}')">
+                                                    👥 Candidatures
+                                                </button>
+                                                <button class="btn btn-sm btn-primary" onclick="editJob('{{ job.id_ad }}')">
+                                                    ✏️ Modifier
+                                                </button>
+                                                <button class="btn btn-sm btn-danger" onclick="deleteJob('{{ job.id_ad }}', '{{ job.title }}')">
+                                                    🗑️ Supprimer
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="job-details">
+                                        <div class="job-description">{{ job.short_description }}</div>
+                                        <div class="job-meta">
+                                            <span>💼 {{ job.work_time|replace('_', ' ')|title }}</span>
+                                            {% if job.salary_min or job.salary_max %}
+                                                <span>💰 
+                                                    {% if job.salary_min and job.salary_max %}
+                                                        {{ job.salary_min }}€ - {{ job.salary_max }}€
+                                                    {% elif job.salary_min %}
+                                                        À partir de {{ job.salary_min }}€
+                                                    {% elif job.salary_max %}
+                                                        Jusqu'à {{ job.salary_max }}€
+                                                    {% endif %}
+                                                </span>
+                                            {% endif %}
+                                            <span>📅 Publié le {{ job.created_at.strftime('%d/%m/%Y') }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="no-jobs">
+                                <div class="no-jobs-icon">📋</div>
+                                <h4 class="no-jobs-title">Aucune offre d'emploi</h4>
+                                <p>Vous n'avez pas encore créé d'offres d'emploi pour votre entreprise.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                {% else %}
+                    <!-- L'utilisateur n'a pas encore d'entreprise -->
+                    <div class="no-company">
+                        <div class="no-company-icon">🏢</div>
+                        <h3 class="no-company-title">Vous n'avez pas encore créé votre entreprise</h3>
+                        <p>Créez votre entreprise pour pouvoir publier des offres d'emploi et gérer les candidatures.</p>
+                        
+                        <!-- Formulaire de création d'entreprise -->
+                        <div id="createCompanyForm" class="create-company-form" style="display: none;">
+                            <form id="newCompanyForm">
+                                <div class="form-group">
+                                    <label for="new_company_name" class="form-label">Nom de l'entreprise :</label>
+                                    <input type="text" id="new_company_name" name="name" class="form-control">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="new_company_address" class="form-label">Adresse :</label>
+                                    <input type="text" id="new_company_address" name="address" class="form-control" placeholder="123 rue de l'Entreprise, Paris">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="new_company_description" class="form-label">Description :</label>
+                                    <textarea id="new_company_description" name="description" class="form-control" rows="4" placeholder="Décrivez votre entreprise..."></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="new_company_website" class="form-label">Site web :</label>
+                                    <input type="url" id="new_company_website" name="website" class="form-control" placeholder="https://www.monentreprise.com">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="new_company_sector" class="form-label">Secteur d'activité :</label>
+                                    <select id="new_company_sector" name="sector" class="form-control">
+                                        <option value="">Choisir un secteur</option>
+                                        <option value="Technologie">Technologie</option>
+                                        <option value="Finance">Finance</option>
+                                        <option value="Santé">Santé</option>
+                                        <option value="Éducation">Éducation</option>
+                                        <option value="Commerce">Commerce</option>
+                                        <option value="Industrie">Industrie</option>
+                                        <option value="Services">Services</option>
+                                        <option value="Autre">Autre</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="new_company_size" class="form-label">Taille de l'entreprise :</label>
+                                    <select id="new_company_size" name="company_size" class="form-control">
+                                        <option value="">Choisir une taille</option>
+                                        <option value="1-10">1-10 employés</option>
+                                        <option value="11-50">11-50 employés</option>
+                                        <option value="51-200">51-200 employés</option>
+                                        <option value="201-1000">201-1000 employés</option>
+                                        <option value="1000+">1000+ employés</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="profile-form-buttons">
+                                    <button type="submit" class="btn-profile-save">
+                                        🏢 Créer l'entreprise
+                                    </button>
+                                    <button type="button" id="cancelCreateCompanyBtn" class="btn-profile-cancel">
+                                        ❌ Annuler
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='script/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='script/profile.js') }}"></script>
+</body>
+</html>
+</body>
+</html>

@@ -274,9 +274,15 @@ def profile():
     try:
         cursor = connection.cursor(dictionary=True)
 
-        # Get user information
-        cursor.execute("SELECT * FROM people WHERE id_people = %s",
-                       (session['user_id'],))
+        # Get user information with company information
+        cursor.execute("""
+            SELECT p.*, c.id_company, c.name as company_name, c.description as company_description,
+                   c.website as company_website, c.address as company_address,
+                   c.sector as company_sector, c.company_size as company_size
+            FROM people p
+            LEFT JOIN companies c ON p.owned_company_id = c.id_company
+            WHERE p.id_people = %s
+        """, (session['user_id'],))
         user = cursor.fetchone()
 
         # Get user's applications
@@ -291,15 +297,193 @@ def profile():
         """, (session['user_id'],))
         applications = cursor.fetchall()
 
+        # If user has a company, get company job postings and applications
+        company_jobs = []
+        if user and user['id_company']:
+            cursor.execute("""
+                SELECT a.*, COUNT(ja.id_application) as applications_count
+                FROM advertisements a 
+                LEFT JOIN job_applications ja ON a.id_ad = ja.id_ad
+                WHERE a.company_id = %s 
+                GROUP BY a.id_ad
+                ORDER BY a.created_at DESC
+            """, (user['id_company'],))
+            company_jobs = cursor.fetchall()
+
         cursor.close()
         connection.close()
 
-        return render_template('profile.html', user=user, applications=applications)
+        return render_template('profile.html', user=user, applications=applications, company_jobs=company_jobs)
 
     except Error as e:
         print(f"Error fetching profile data: {e}")
         flash('Erreur lors de la récupération du profil', 'error')
         return redirect(url_for('index'))
+
+
+@app.route("/entreprise")
+def entreprise():
+    """Page dédiée à la gestion d'entreprise"""
+    if not session.get('user_id'):
+        flash('Vous devez être connecté pour accéder à cette page', 'error')
+        return redirect(url_for('login'))
+
+    connection = get_db_connection()
+    if connection is None:
+        flash('Erreur de connexion à la base de données', 'error')
+        return redirect(url_for('index'))
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+
+        # Get user information with company information
+        cursor.execute("""
+            SELECT p.*, c.id_company, c.name as company_name, c.description as company_description,
+                   c.website as company_website, c.address as company_address,
+                   c.sector as company_sector, c.company_size as company_size
+            FROM people p
+            LEFT JOIN companies c ON p.owned_company_id = c.id_company
+            WHERE p.id_people = %s
+        """, (session['user_id'],))
+        user = cursor.fetchone()
+
+        # If user has a company, get company job postings and applications
+        company_jobs = []
+        if user and user['id_company']:
+            cursor.execute("""
+                SELECT a.*, COUNT(ja.id_application) as applications_count
+                FROM advertisements a 
+                LEFT JOIN job_applications ja ON a.id_ad = ja.id_ad
+                WHERE a.company_id = %s 
+                GROUP BY a.id_ad
+                ORDER BY a.created_at DESC
+            """, (user['id_company'],))
+            company_jobs = cursor.fetchall()
+
+        cursor.close()
+        connection.close()
+
+        return render_template('entreprise.html', user=user, company_jobs=company_jobs)
+
+    except Error as e:
+        print(f"Error fetching company data: {e}")
+        flash('Erreur lors de la récupération des données de l\'entreprise', 'error')
+        return redirect(url_for('index'))
+
+
+@app.route("/ajouter-offre")
+def ajouter_offre():
+    """Page dédiée à la création ou modification d'une offre d'emploi"""
+    if not session.get('user_id'):
+        flash('Vous devez être connecté pour accéder à cette page', 'error')
+        return redirect(url_for('login'))
+
+    # Récupérer l'ID de l'offre à modifier (optionnel)
+    job_id = request.args.get('job_id')
+
+    connection = get_db_connection()
+    if connection is None:
+        flash('Erreur de connexion à la base de données', 'error')
+        return redirect(url_for('index'))
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+
+        # Vérifier que l'utilisateur possède une entreprise
+        cursor.execute("""
+            SELECT p.*, c.id_company, c.name as company_name
+            FROM people p
+            LEFT JOIN companies c ON p.owned_company_id = c.id_company
+            WHERE p.id_people = %s
+        """, (session['user_id'],))
+        user = cursor.fetchone()
+
+        # Rediriger si l'utilisateur n'a pas d'entreprise
+        if not user or not user['id_company']:
+            flash(
+                'Vous devez créer une entreprise avant de pouvoir publier des offres d\'emploi', 'error')
+            return redirect(url_for('entreprise'))
+
+        job_data = None
+        # Si c'est une modification, récupérer les données de l'offre
+        if job_id:
+            cursor.execute("""
+                SELECT * FROM advertisements 
+                WHERE id_ad = %s AND company_id = %s
+            """, (job_id, user['id_company']))
+            job_data = cursor.fetchone()
+
+            if not job_data:
+                flash(
+                    'Offre d\'emploi non trouvée ou vous n\'avez pas les droits pour la modifier', 'error')
+                return redirect(url_for('entreprise'))
+
+        cursor.close()
+        connection.close()
+
+        return render_template('ajouter-offre.html', user=user, job_data=job_data)
+
+    except Error as e:
+        print(f"Error checking company ownership: {e}")
+        flash('Erreur lors de la vérification des données', 'error')
+        return redirect(url_for('index'))
+
+
+@app.route("/candidatures/<int:job_id>")
+def candidatures(job_id):
+    """Page dédiée à l'affichage des candidatures d'une offre d'emploi"""
+    if not session.get('user_id'):
+        flash('Vous devez être connecté pour accéder à cette page', 'error')
+        return redirect(url_for('login'))
+
+    connection = get_db_connection()
+    if connection is None:
+        flash('Erreur de connexion à la base de données', 'error')
+        return redirect(url_for('index'))
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+
+        # Vérifier que l'utilisateur possède l'entreprise qui a posté cette offre
+        cursor.execute("""
+            SELECT a.*, c.name as company_name, p.owned_company_id
+            FROM advertisements a
+            JOIN companies c ON a.company_id = c.id_company
+            JOIN people p ON p.id_people = %s
+            WHERE a.id_ad = %s
+        """, (session['user_id'], job_id))
+
+        job_info = cursor.fetchone()
+
+        if not job_info:
+            flash('Offre d\'emploi non trouvée', 'error')
+            return redirect(url_for('entreprise'))
+
+        if job_info['company_id'] != job_info['owned_company_id']:
+            flash('Vous n\'avez pas les droits pour voir ces candidatures', 'error')
+            return redirect(url_for('entreprise'))
+
+        # Récupérer les candidatures avec les informations des candidats
+        cursor.execute("""
+            SELECT ja.*, p.first_name, p.surname, p.email, p.phone,
+                   p.address_street, p.address_city
+            FROM job_applications ja
+            JOIN people p ON ja.id_people = p.id_people
+            WHERE ja.id_ad = %s
+            ORDER BY ja.application_date DESC
+        """, (job_id,))
+
+        applications = cursor.fetchall()
+
+        cursor.close()
+        connection.close()
+
+        return render_template('candidatures.html', job_info=job_info, applications=applications)
+
+    except Error as e:
+        print(f"Error fetching applications: {e}")
+        flash('Erreur lors de la récupération des candidatures', 'error')
+        return redirect(url_for('entreprise'))
 
 
 @app.route("/change-password", methods=['POST'])
@@ -526,9 +710,6 @@ def apply_to_job():
 
 @app.route("/api/companies", methods=['GET', 'POST'])
 def companies_crud():
-    if not session.get('is_admin'):
-        return jsonify({"error": "Accès refusé"}), 403
-
     connection = get_db_connection()
     if connection is None:
         return jsonify({"error": "Database connection error"}), 500
@@ -537,33 +718,75 @@ def companies_crud():
 
     try:
         if request.method == 'GET':
-            page = int(request.args.get('page', 1))
-            per_page = int(request.args.get('per_page', 10))
-            offset = (page - 1) * per_page
+            # Admin peut voir toutes les entreprises, utilisateur normal voit seulement les siennes
+            if session.get('is_admin'):
+                page = int(request.args.get('page', 1))
+                per_page = int(request.args.get('per_page', 10))
+                offset = (page - 1) * per_page
 
-            cursor.execute("SELECT COUNT(*) as total FROM companies")
-            total = cursor.fetchone()['total']
+                cursor.execute("SELECT COUNT(*) as total FROM companies")
+                total = cursor.fetchone()['total']
 
-            cursor.execute(
-                "SELECT * FROM companies LIMIT %s OFFSET %s", (per_page, offset))
-            companies = cursor.fetchall()
+                cursor.execute("""
+                    SELECT c.*, p.first_name, p.surname 
+                    FROM companies c 
+                    LEFT JOIN people p ON c.created_by = p.id_people 
+                    LIMIT %s OFFSET %s
+                """, (per_page, offset))
+                companies = cursor.fetchall()
 
-            return jsonify({
-                "companies": companies,
-                "total": total,
-                "page": page,
-                "per_page": per_page,
-                "total_pages": (total + per_page - 1) // per_page
-            })
+                return jsonify({
+                    "companies": companies,
+                    "total": total,
+                    "page": page,
+                    "per_page": per_page,
+                    "total_pages": (total + per_page - 1) // per_page
+                })
+            else:
+                # Retourner toutes les entreprises pour affichage public
+                cursor.execute(
+                    "SELECT * FROM companies ORDER BY created_at DESC")
+                companies = cursor.fetchall()
+                return jsonify({"companies": companies})
 
         elif request.method == 'POST':
+            if not session.get('user_id'):
+                return jsonify({"error": "Authentification requise"}), 401
+
             data = request.json
+            user_id = session['user_id']
+
+            # Vérifier si l'utilisateur possède déjà une entreprise
+            cursor.execute(
+                "SELECT owned_company_id FROM people WHERE id_people = %s", (user_id,))
+            user_data = cursor.fetchone()
+
+            if user_data and user_data['owned_company_id']:
+                return jsonify({"error": "Vous possédez déjà une entreprise"}), 400
+
+            # Créer la nouvelle entreprise
             cursor.execute("""
-                INSERT INTO companies (name, address, description, website) 
-                VALUES (%s, %s, %s, %s)
-            """, (data['name'], data.get('address'), data.get('description'), data.get('website')))
+                INSERT INTO companies (name, address, description, website, created_by, sector, company_size) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (
+                data['name'],
+                data.get('address'),
+                data.get('description'),
+                data.get('website'),
+                user_id,
+                data.get('sector'),
+                data.get('company_size')
+            ))
+
+            company_id = cursor.lastrowid
+
+            # Mettre à jour l'utilisateur pour qu'il possède cette entreprise
+            cursor.execute("""
+                UPDATE people SET owned_company_id = %s WHERE id_people = %s
+            """, (company_id, user_id))
+
             connection.commit()
-            return jsonify({"success": True, "id": cursor.lastrowid})
+            return jsonify({"success": True, "id": company_id})
 
     except Error as e:
         print(f"Error in companies CRUD: {e}")
@@ -575,9 +798,6 @@ def companies_crud():
 
 @app.route("/api/companies/<int:company_id>", methods=['GET', 'PUT', 'DELETE'])
 def company_crud(company_id):
-    if not session.get('is_admin'):
-        return jsonify({"error": "Accès refusé"}), 403
-
     connection = get_db_connection()
     if connection is None:
         return jsonify({"error": "Database connection error"}), 500
@@ -586,8 +806,12 @@ def company_crud(company_id):
 
     try:
         if request.method == 'GET':
-            cursor.execute(
-                "SELECT id_company, name, address, description, website FROM companies WHERE id_company = %s", (company_id,))
+            cursor.execute("""
+                SELECT c.*, p.first_name, p.surname 
+                FROM companies c 
+                LEFT JOIN people p ON c.created_by = p.id_people 
+                WHERE c.id_company = %s
+            """, (company_id,))
             company = cursor.fetchone()
 
             if company:
@@ -596,16 +820,63 @@ def company_crud(company_id):
                 return jsonify({"error": "Not found"}), 404
 
         elif request.method == 'PUT':
+            if not session.get('user_id'):
+                return jsonify({"error": "Authentification requise"}), 401
+
+            # Vérifier que l'utilisateur possède cette entreprise ou est admin
+            user_id = session['user_id']
+            is_admin = session.get('is_admin', False)
+
+            cursor.execute(
+                "SELECT created_by FROM companies WHERE id_company = %s", (company_id,))
+            company = cursor.fetchone()
+
+            if not company:
+                return jsonify({"error": "Entreprise non trouvée"}), 404
+
+            if not is_admin and company['created_by'] != user_id:
+                return jsonify({"error": "Accès refusé"}), 403
+
             data = request.json
             cursor.execute("""
                 UPDATE companies 
-                SET name = %s, address = %s, description = %s, website = %s 
+                SET name = %s, address = %s, description = %s, website = %s, sector = %s, company_size = %s
                 WHERE id_company = %s
-            """, (data['name'], data.get('address'), data.get('description'), data.get('website'), company_id))
+            """, (
+                data['name'],
+                data.get('address'),
+                data.get('description'),
+                data.get('website'),
+                data.get('sector'),
+                data.get('company_size'),
+                company_id
+            ))
             connection.commit()
             return jsonify({"success": True})
 
         elif request.method == 'DELETE':
+            if not session.get('user_id'):
+                return jsonify({"error": "Authentification requise"}), 401
+
+            # Vérifier que l'utilisateur possède cette entreprise ou est admin
+            user_id = session['user_id']
+            is_admin = session.get('is_admin', False)
+
+            cursor.execute(
+                "SELECT created_by FROM companies WHERE id_company = %s", (company_id,))
+            company = cursor.fetchone()
+
+            if not company:
+                return jsonify({"error": "Entreprise non trouvée"}), 404
+
+            if not is_admin and company['created_by'] != user_id:
+                return jsonify({"error": "Accès refusé"}), 403
+
+            # Mettre à jour l'utilisateur qui possédait cette entreprise
+            cursor.execute(
+                "UPDATE people SET owned_company_id = NULL WHERE owned_company_id = %s", (company_id,))
+
+            # Supprimer l'entreprise
             cursor.execute(
                 "DELETE FROM companies WHERE id_company = %s", (company_id,))
             connection.commit()
@@ -613,6 +884,428 @@ def company_crud(company_id):
 
     except Exception as e:
         print(f"Error in company CRUD: {e}")
+        return jsonify({"error": "Database error"}), 500
+    finally:
+        cursor.close()
+        connection.close()
+
+# ============= ENTERPRISE MANAGEMENT ROUTES =============
+
+
+@app.route("/api/my-company", methods=['GET', 'POST', 'PUT', 'DELETE'])
+def manage_my_company():
+    """Gérer l'entreprise de l'utilisateur connecté"""
+    if not session.get('user_id'):
+        return jsonify({"error": "Authentification requise"}), 401
+
+    connection = get_db_connection()
+    if connection is None:
+        return jsonify({"error": "Database connection error"}), 500
+
+    cursor = connection.cursor(dictionary=True)
+
+    try:
+        user_id = session['user_id']
+
+        if request.method == 'GET':
+            # Récupérer l'entreprise de l'utilisateur
+            cursor.execute("""
+                SELECT c.* 
+                FROM companies c 
+                JOIN people p ON p.owned_company_id = c.id_company 
+                WHERE p.id_people = %s
+            """, (user_id,))
+
+            company = cursor.fetchone()
+            return jsonify({"company": company})
+
+        elif request.method == 'POST':
+            # Créer une nouvelle entreprise
+            data = request.get_json()
+
+            # Vérifier que l'utilisateur n'a pas déjà une entreprise
+            cursor.execute(
+                "SELECT owned_company_id FROM people WHERE id_people = %s", (user_id,))
+            user = cursor.fetchone()
+
+            if user and user['owned_company_id']:
+                return jsonify({"status": "error", "message": "Vous possédez déjà une entreprise"}), 400
+
+            # Créer l'entreprise
+            cursor.execute("""
+                INSERT INTO companies (name, address, description, website, sector, company_size, created_by) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (
+                data.get('name'),
+                data.get('address'),
+                data.get('description'),
+                data.get('website'),
+                data.get('sector'),
+                data.get('company_size'),
+                user_id
+            ))
+
+            company_id = cursor.lastrowid
+
+            # Associer l'entreprise à l'utilisateur
+            cursor.execute("""
+                UPDATE people SET owned_company_id = %s WHERE id_people = %s
+            """, (company_id, user_id))
+
+            connection.commit()
+            return jsonify({"status": "success", "message": "Entreprise créée avec succès", "company_id": company_id})
+
+        elif request.method == 'PUT':
+            # Modifier l'entreprise existante
+            data = request.get_json()
+
+            # Récupérer l'ID de l'entreprise de l'utilisateur
+            cursor.execute(
+                "SELECT owned_company_id FROM people WHERE id_people = %s", (user_id,))
+            user = cursor.fetchone()
+
+            if not user or not user['owned_company_id']:
+                return jsonify({"status": "error", "message": "Vous ne possédez pas d'entreprise"}), 400
+
+            company_id = user['owned_company_id']
+
+            # Mettre à jour l'entreprise
+            cursor.execute("""
+                UPDATE companies SET 
+                name = %s, address = %s, description = %s, website = %s, 
+                sector = %s, company_size = %s 
+                WHERE id_company = %s AND created_by = %s
+            """, (
+                data.get('name'),
+                data.get('address'),
+                data.get('description'),
+                data.get('website'),
+                data.get('sector'),
+                data.get('company_size'),
+                company_id,
+                user_id
+            ))
+
+            connection.commit()
+            return jsonify({"status": "success", "message": "Entreprise mise à jour avec succès"})
+
+        elif request.method == 'DELETE':
+            # Supprimer l'entreprise de l'utilisateur
+            # Récupérer l'ID de l'entreprise de l'utilisateur
+            cursor.execute(
+                "SELECT owned_company_id FROM people WHERE id_people = %s", (user_id,))
+            user = cursor.fetchone()
+
+            if not user or not user['owned_company_id']:
+                return jsonify({"status": "error", "message": "Vous ne possédez pas d'entreprise"}), 400
+
+            company_id = user['owned_company_id']
+
+            # Supprimer d'abord les candidatures liées aux offres de l'entreprise
+            cursor.execute("""
+                DELETE ja FROM job_applications ja
+                INNER JOIN advertisements a ON ja.id_ad = a.id_ad
+                WHERE a.company_id = %s
+            """, (company_id,))
+
+            # Supprimer les offres d'emploi de l'entreprise
+            cursor.execute(
+                "DELETE FROM advertisements WHERE company_id = %s", (company_id,))
+
+            # Dissocier l'entreprise de l'utilisateur
+            cursor.execute(
+                "UPDATE people SET owned_company_id = NULL WHERE id_people = %s", (user_id,))
+
+            # Supprimer l'entreprise
+            cursor.execute(
+                "DELETE FROM companies WHERE id_company = %s AND created_by = %s", (company_id, user_id))
+
+            connection.commit()
+            return jsonify({"status": "success", "message": "Entreprise supprimée avec succès"})
+
+    except Exception as e:
+        print(f"Error managing user company: {e}")
+        return jsonify({"status": "error", "message": "Erreur de base de données"}), 500
+    finally:
+        cursor.close()
+        connection.close()
+
+
+@app.route("/api/my-company/jobs", methods=['GET', 'POST'])
+def manage_company_jobs():
+    """Gérer les offres d'emploi de l'entreprise de l'utilisateur"""
+    if not session.get('user_id'):
+        return jsonify({"error": "Authentification requise"}), 401
+
+    connection = get_db_connection()
+    if connection is None:
+        return jsonify({"error": "Database connection error"}), 500
+
+    cursor = connection.cursor(dictionary=True)
+
+    try:
+        user_id = session['user_id']
+
+        # Vérifier que l'utilisateur possède une entreprise
+        cursor.execute(
+            "SELECT owned_company_id FROM people WHERE id_people = %s", (user_id,))
+        user_data = cursor.fetchone()
+
+        if not user_data or not user_data['owned_company_id']:
+            return jsonify({"error": "Vous ne possédez pas d'entreprise"}), 403
+
+        company_id = user_data['owned_company_id']
+
+        if request.method == 'GET':
+            # Récupérer toutes les offres de l'entreprise
+            cursor.execute("""
+                SELECT a.*, COUNT(ja.id_application) as applications_count
+                FROM advertisements a 
+                LEFT JOIN job_applications ja ON a.id_ad = ja.id_ad
+                WHERE a.company_id = %s 
+                GROUP BY a.id_ad
+                ORDER BY a.created_at DESC
+            """, (company_id,))
+
+            jobs = cursor.fetchall()
+            return jsonify({"jobs": jobs})
+
+        elif request.method == 'POST':
+            # Créer une nouvelle offre d'emploi
+            data = request.json
+            cursor.execute("""
+                INSERT INTO advertisements (title, short_description, full_description, 
+                                         salary_min, salary_max, location, work_time, 
+                                         company_id, posted_by) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (
+                data['title'],
+                data.get('short_description'),
+                data.get('full_description'),
+                data.get('salary_min'),
+                data.get('salary_max'),
+                data.get('location'),
+                data.get('work_time', 'full-time'),
+                company_id,
+                user_id
+            ))
+
+            connection.commit()
+            return jsonify({"success": True, "id": cursor.lastrowid})
+
+    except Exception as e:
+        print(f"Error managing company jobs: {e}")
+        return jsonify({"error": "Database error"}), 500
+    finally:
+        cursor.close()
+        connection.close()
+
+
+@app.route("/api/my-company/jobs/<int:job_id>/applications", methods=['GET'])
+def get_job_applications(job_id):
+    """Récupérer les candidatures pour une offre d'emploi spécifique"""
+    if not session.get('user_id'):
+        return jsonify({"error": "Authentification requise"}), 401
+
+    connection = get_db_connection()
+    if connection is None:
+        return jsonify({"error": "Database connection error"}), 500
+
+    cursor = connection.cursor(dictionary=True)
+
+    try:
+        user_id = session['user_id']
+
+        # Vérifier que l'utilisateur possède l'entreprise qui a posté cette offre
+        cursor.execute("""
+            SELECT a.company_id, p.owned_company_id 
+            FROM advertisements a
+            JOIN people p ON p.id_people = %s
+            WHERE a.id_ad = %s
+        """, (user_id, job_id))
+
+        result = cursor.fetchone()
+        if not result or result['company_id'] != result['owned_company_id']:
+            return jsonify({"error": "Accès refusé"}), 403
+
+        # Récupérer les candidatures avec les informations des candidats
+        cursor.execute("""
+            SELECT ja.*, p.first_name, p.surname, p.email, p.phone,
+                   p.address_street, p.address_city, a.title as job_title
+            FROM job_applications ja
+            JOIN people p ON ja.id_people = p.id_people
+            JOIN advertisements a ON ja.id_ad = a.id_ad
+            WHERE ja.id_ad = %s
+            ORDER BY ja.application_date DESC
+        """, (job_id,))
+
+        applications = cursor.fetchall()
+        return jsonify({"applications": applications})
+
+    except Exception as e:
+        print(f"Error getting job applications: {e}")
+        return jsonify({"error": "Database error"}), 500
+    finally:
+        cursor.close()
+        connection.close()
+
+
+@app.route("/api/my-company/jobs/<int:job_id>", methods=['DELETE'])
+def delete_company_job(job_id):
+    """Supprimer une offre d'emploi de l'entreprise de l'utilisateur"""
+    if not session.get('user_id'):
+        return jsonify({"error": "Authentification requise"}), 401
+
+    connection = get_db_connection()
+    if connection is None:
+        return jsonify({"error": "Database connection error"}), 500
+
+    cursor = connection.cursor(dictionary=True)
+
+    try:
+        user_id = session['user_id']
+
+        # Vérifier que l'utilisateur possède l'entreprise qui a posté cette offre
+        cursor.execute("""
+            SELECT a.company_id, p.owned_company_id, a.title
+            FROM advertisements a
+            JOIN people p ON p.id_people = %s
+            WHERE a.id_ad = %s
+        """, (user_id, job_id))
+
+        result = cursor.fetchone()
+        if not result:
+            return jsonify({"error": "Offre d'emploi non trouvée"}), 404
+
+        if result['company_id'] != result['owned_company_id']:
+            return jsonify({"error": "Accès refusé - vous ne pouvez supprimer que vos propres offres"}), 403
+
+        # Supprimer l'offre d'emploi (les candidatures seront supprimées automatiquement grâce à ON DELETE CASCADE)
+        cursor.execute(
+            "DELETE FROM advertisements WHERE id_ad = %s", (job_id,))
+
+        if cursor.rowcount == 0:
+            return jsonify({"error": "Offre d'emploi non trouvée"}), 404
+
+        connection.commit()
+        return jsonify({"success": True, "message": f"Offre '{result['title']}' supprimée avec succès"})
+
+    except Exception as e:
+        print(f"Error deleting job: {e}")
+        return jsonify({"error": "Database error"}), 500
+    finally:
+        cursor.close()
+        connection.close()
+
+
+@app.route("/api/my-company/jobs/<int:job_id>", methods=['PUT'])
+def update_company_job(job_id):
+    """Modifier une offre d'emploi de l'entreprise de l'utilisateur"""
+    if not session.get('user_id'):
+        return jsonify({"error": "Authentification requise"}), 401
+
+    connection = get_db_connection()
+    if connection is None:
+        return jsonify({"error": "Database connection error"}), 500
+
+    cursor = connection.cursor(dictionary=True)
+
+    try:
+        user_id = session['user_id']
+        data = request.json
+
+        # Vérifier que l'utilisateur possède l'entreprise qui a posté cette offre
+        cursor.execute("""
+            SELECT a.company_id, p.owned_company_id
+            FROM advertisements a
+            JOIN people p ON p.id_people = %s
+            WHERE a.id_ad = %s
+        """, (user_id, job_id))
+
+        result = cursor.fetchone()
+        if not result:
+            return jsonify({"error": "Offre d'emploi non trouvée"}), 404
+
+        if result['company_id'] != result['owned_company_id']:
+            return jsonify({"error": "Accès refusé - vous ne pouvez modifier que vos propres offres"}), 403
+
+        # Mettre à jour l'offre d'emploi
+        cursor.execute("""
+            UPDATE advertisements 
+            SET title = %s, short_description = %s, full_description = %s,
+                salary_min = %s, salary_max = %s, location = %s, work_time = %s,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id_ad = %s
+        """, (
+            data['title'],
+            data.get('short_description'),
+            data.get('full_description'),
+            data.get('salary_min'),
+            data.get('salary_max'),
+            data.get('location'),
+            data.get('work_time', 'full-time'),
+            job_id
+        ))
+
+        if cursor.rowcount == 0:
+            return jsonify({"error": "Offre d'emploi non trouvée"}), 404
+
+        connection.commit()
+        return jsonify({"success": True, "message": "Offre d'emploi modifiée avec succès"})
+
+    except Exception as e:
+        print(f"Error updating job: {e}")
+        return jsonify({"error": "Database error"}), 500
+    finally:
+        cursor.close()
+        connection.close()
+
+
+@app.route("/api/my-company/applications/<int:application_id>/status", methods=['PUT'])
+def update_application_status(application_id):
+    """Mettre à jour le statut d'une candidature"""
+    if not session.get('user_id'):
+        return jsonify({"error": "Authentification requise"}), 401
+
+    connection = get_db_connection()
+    if connection is None:
+        return jsonify({"error": "Database connection error"}), 500
+
+    cursor = connection.cursor(dictionary=True)
+
+    try:
+        user_id = session['user_id']
+        data = request.json
+        new_status = data.get('status')
+
+        if new_status not in ['pending', 'reviewed', 'accepted', 'rejected']:
+            return jsonify({"error": "Statut invalide"}), 400
+
+        # Vérifier que l'utilisateur possède l'entreprise liée à cette candidature
+        cursor.execute("""
+            SELECT ja.id_application, a.company_id, p.owned_company_id 
+            FROM job_applications ja
+            JOIN advertisements a ON ja.id_ad = a.id_ad
+            JOIN people p ON p.id_people = %s
+            WHERE ja.id_application = %s
+        """, (user_id, application_id))
+
+        result = cursor.fetchone()
+        if not result or result['company_id'] != result['owned_company_id']:
+            return jsonify({"error": "Accès refusé"}), 403
+
+        # Mettre à jour le statut
+        cursor.execute("""
+            UPDATE job_applications 
+            SET status = %s 
+            WHERE id_application = %s
+        """, (new_status, application_id))
+
+        connection.commit()
+        return jsonify({"success": True})
+
+    except Exception as e:
+        print(f"Error updating application status: {e}")
         return jsonify({"error": "Database error"}), 500
     finally:
         cursor.close()

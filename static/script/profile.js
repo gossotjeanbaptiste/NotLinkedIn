@@ -182,3 +182,235 @@ Cette action :
         });
     }
 });
+
+// ===== GESTION DE L'ENTREPRISE =====
+
+// Création d'entreprise
+document.addEventListener('DOMContentLoaded', function() {
+    const createCompanyBtn = document.getElementById('createCompanyBtn');
+    const createCompanyForm = document.getElementById('createCompanyForm');
+    const cancelCreateCompanyBtn = document.getElementById('cancelCreateCompanyBtn');
+    const newCompanyForm = document.getElementById('newCompanyForm');
+
+    // Afficher le formulaire de création
+    if (createCompanyBtn) {
+        createCompanyBtn.addEventListener('click', function() {
+            createCompanyForm.style.display = 'block';
+            createCompanyBtn.style.display = 'none';
+        });
+    }
+
+    // Annuler la création
+    if (cancelCreateCompanyBtn) {
+        cancelCreateCompanyBtn.addEventListener('click', function() {
+            createCompanyForm.style.display = 'none';
+            if (createCompanyBtn) createCompanyBtn.style.display = 'inline-block';
+            newCompanyForm.reset();
+        });
+    }
+
+    // Soumettre la création d'entreprise
+    if (newCompanyForm) {
+        newCompanyForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validation du nom d'entreprise
+            const companyName = document.getElementById('new_company_name').value.trim();
+            if (!companyName) {
+                alert('Le nom de l\'entreprise est obligatoire.');
+                return;
+            }
+            
+            const formData = new FormData(newCompanyForm);
+            const data = Object.fromEntries(formData);
+            
+            fetch('/api/my-company', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Entreprise créée avec succès !');
+                    location.reload(); // Recharger pour afficher la nouvelle entreprise
+                } else {
+                    alert('Erreur : ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                alert('Erreur lors de la création de l\'entreprise');
+            });
+        });
+    }
+
+    // Édition d'entreprise
+    const editCompanyBtn = document.getElementById('editCompanyBtn');
+    const companyView = document.getElementById('companyView');
+    const companyEdit = document.getElementById('companyEdit');
+    const cancelCompanyEditBtn = document.getElementById('cancelCompanyEditBtn');
+    const companyForm = document.getElementById('companyForm');
+    const deleteCompanyBtn = document.getElementById('deleteCompanyBtn');
+
+    // Afficher le formulaire d'édition
+    if (editCompanyBtn) {
+        editCompanyBtn.addEventListener('click', function() {
+            companyView.style.display = 'none';
+            companyEdit.style.display = 'block';
+        });
+    }
+
+    // Supprimer l'entreprise
+    if (deleteCompanyBtn) {
+        deleteCompanyBtn.addEventListener('click', function() {
+            if (confirm('⚠️ Êtes-vous sûr de vouloir supprimer votre entreprise ?\n\nCette action est irréversible et supprimera également toutes vos offres d\'emploi et candidatures associées.')) {
+                fetch('/api/my-company', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert('Entreprise supprimée avec succès !');
+                        location.reload(); // Recharger pour masquer la section entreprise
+                    } else {
+                        alert('Erreur : ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    alert('Erreur lors de la suppression de l\'entreprise');
+                });
+            }
+        });
+    }
+
+    // Annuler l'édition
+    if (cancelCompanyEditBtn) {
+        cancelCompanyEditBtn.addEventListener('click', function() {
+            companyView.style.display = 'block';
+            companyEdit.style.display = 'none';
+        });
+    }
+
+    // Soumettre l'édition d'entreprise
+    if (companyForm) {
+        companyForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validation du nom d'entreprise
+            const companyName = document.getElementById('company_name').value.trim();
+            if (!companyName) {
+                alert('Le nom de l\'entreprise est obligatoire.');
+                return;
+            }
+            
+            const formData = new FormData(companyForm);
+            const data = Object.fromEntries(formData);
+            
+            fetch('/api/my-company', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Entreprise mise à jour avec succès !');
+                    location.reload(); // Recharger pour afficher les modifications
+                } else {
+                    alert('Erreur : ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                alert('Erreur lors de la mise à jour de l\'entreprise');
+            });
+        });
+    }
+});
+
+// Voir les candidatures pour une offre d'emploi
+window.viewJobApplications = function(jobId) {
+    // Rediriger vers la page dédiée aux candidatures
+    window.location.href = `/candidatures/${jobId}`;
+};
+
+// Mettre à jour le statut d'une candidature
+window.updateApplicationStatus = function(applicationId, newStatus) {
+    fetch(`/api/my-company/applications/${applicationId}/status`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: newStatus })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Statut mis à jour avec succès !');
+        } else {
+            alert('Erreur : ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+        alert('Erreur lors de la mise à jour du statut');
+    });
+};
+
+// Obtenir le badge de statut
+function getStatusBadge(status) {
+    switch(status) {
+        case 'en_attente':
+            return '<span class="status-badge status-pending">⏳ En attente</span>';
+        case 'acceptee':
+            return '<span class="status-badge status-accepted">✅ Acceptée</span>';
+        case 'refusee':
+            return '<span class="status-badge status-rejected">❌ Refusée</span>';
+        default:
+            return '<span class="status-badge status-pending">⏳ En attente</span>';
+    }
+}
+
+// Modifier une offre d'emploi
+window.editJob = function(jobId) {
+    // Rediriger vers la page d'ajout/modification d'offre avec l'ID de l'offre
+    window.location.href = `/ajouter-offre?job_id=${jobId}`;
+};
+
+// Supprimer une offre d'emploi
+window.deleteJob = async function(jobId, jobTitle) {
+    // Confirmation de suppression
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer l'offre "${jobTitle}" ?\n\nCette action est irréversible et supprimera également toutes les candidatures associées.`)) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/api/my-company/jobs/${jobId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        if (response.ok) {
+            alert('Offre d\'emploi supprimée avec succès !');
+            // Recharger la page pour mettre à jour la liste
+            window.location.reload();
+        } else {
+            const error = await response.json();
+            alert('Erreur: ' + (error.message || 'Impossible de supprimer l\'offre'));
+        }
+    } catch (error) {
+        console.error('Erreur lors de la suppression de l\'offre:', error);
+        alert('Erreur de connexion. Veuillez réessayer.');
+    }
+};

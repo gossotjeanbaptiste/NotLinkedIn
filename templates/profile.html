@@ -20,6 +20,8 @@
             <nav class="nav-main">
                 <a href="{{ url_for('index') }}" class="nav-link">Accueil</a>
                 {% if session.user_id %}
+                    <a href="{{ url_for('profile') }}" class="nav-link active">Mon Profil</a>
+                    <a href="{{ url_for('entreprise') }}" class="nav-link">Mon Entreprise</a>
                     {% if session.is_admin %}
                         <a href="{{ url_for('admin') }}" class="nav-link">Administration</a>
                     {% endif %}
@@ -277,8 +279,6 @@
                     </div>
                 {% endif %}
             </div>
-
-            <!-- Section Gestion du compte -->
             <div class="profile-section">
                 <h3 class="profile-section-title">Gestion du compte</h3>
                 

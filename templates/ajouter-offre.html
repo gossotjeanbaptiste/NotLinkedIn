@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if job_data %}Modifier l'offre d'emploi{% else %}Créer une offre d'emploi{% endif %} - NotLinkedIn</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/main.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icon/NotLinkedIn_icon.ico') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-logo">
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+                </a>
+            </div>
+            <nav class="nav-main">
+                <a href="{{ url_for('index') }}" class="nav-link">Accueil</a>
+                {% if session.user_id %}
+                    <a href="{{ url_for('profile') }}" class="nav-link">Mon Profil</a>
+                    <a href="{{ url_for('entreprise') }}" class="nav-link">Mon Entreprise</a>
+                    {% if session.is_admin %}
+                        <a href="{{ url_for('admin') }}" class="nav-link">Administration</a>
+                    {% endif %}
+                    <a href="{{ url_for('logout') }}" class="nav-link">Déconnexion</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="nav-link">Connexion</a>
+                    <a href="{{ url_for('register') }}" class="nav-link">Inscription</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="create-job-container">
+            <div class="create-job-header">
+                <h1 class="create-job-title">🏢 {{ user.company_name }}</h1>
+                <h2 class="create-job-subtitle">
+                    {% if job_data %}
+                        ✏️ Modifier l'offre d'emploi
+                    {% else %}
+                        💼 Créer une nouvelle offre d'emploi
+                    {% endif %}
+                </h2>
+                <p class="create-job-description">
+                    {% if job_data %}
+                        Modifiez les informations de votre offre d'emploi ci-dessous
+                    {% else %}
+                        Remplissez le formulaire ci-dessous pour publier votre offre d'emploi
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="create-job-form-container">
+                <form id="createJobForm" class="create-job-form">
+                    <div class="form-section">
+                        <h3 class="form-section-title">📋 Informations générales</h3>
+                        
+                        <div class="form-group">
+                            <label for="job_title" class="form-label">Titre du poste *</label>
+                            <input type="text" id="job_title" name="title" class="form-control" required placeholder="Ex: Développeur Full Stack Senior" value="{{ job_data.title if job_data else '' }}">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="job_short_description" class="form-label">Description courte *</label>
+                            <input type="text" id="job_short_description" name="short_description" class="form-control" maxlength="200" required placeholder="Résumé attractif du poste en une phrase" value="{{ job_data.short_description if job_data else '' }}">
+                            <small class="form-hint">Maximum 200 caractères - Cette description apparaîtra dans les listes d'offres</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="job_location" class="form-label">Localisation</label>
+                            <input type="text" id="job_location" name="location" class="form-control" placeholder="Ex: Paris 15e, Télétravail, Lyon" value="{{ job_data.location if job_data else '' }}">
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title">💰 Rémunération et contrat</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="job_salary_min" class="form-label">Salaire minimum (€/an)</label>
+                                <input type="number" id="job_salary_min" name="salary_min" class="form-control" min="0" step="1000" placeholder="35000" value="{{ job_data.salary_min if job_data else '' }}">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="job_salary_max" class="form-label">Salaire maximum (€/an)</label>
+                                <input type="number" id="job_salary_max" name="salary_max" class="form-control" min="0" step="1000" placeholder="50000" value="{{ job_data.salary_max if job_data else '' }}">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="job_work_time" class="form-label">Type de poste</label>
+                            <select id="job_work_time" name="work_time" class="form-control">
+                                <option value="">Choisir un type</option>
+                                <option value="full-time" {% if job_data and job_data.work_time == 'full-time' %}selected{% endif %}>Temps plein</option>
+                                <option value="part-time" {% if job_data and job_data.work_time == 'part-time' %}selected{% endif %}>Temps partiel</option>
+                                <option value="contract" {% if job_data and job_data.work_time == 'contract' %}selected{% endif %}>Contrat</option>
+                                <option value="internship" {% if job_data and job_data.work_time == 'internship' %}selected{% endif %}>Stage</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title">📝 Description détaillée</h3>
+                        
+                        <div class="form-group">
+                            <label for="job_full_description" class="form-label">Description complète du poste *</label>
+                            <textarea id="job_full_description" name="full_description" class="form-control" rows="8" required placeholder="Décrivez en détail :
+• Les missions principales
+• L'environnement de travail
+• Les perspectives d'évolution
+• L'équipe et la culture d'entreprise">{{ job_data.full_description if job_data else '' }}</textarea>
+                            <small class="form-hint">Soyez précis et attractif pour attirer les meilleurs candidats</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="job_requirements" class="form-label">Compétences et prérequis</label>
+                            <textarea id="job_requirements" name="requirements" class="form-control" rows="4" placeholder="Ex: 
+• 3+ ans d'expérience en développement web
+• Maîtrise de Python, JavaScript, React
+• Connaissance des bases de données SQL
+• Bon niveau d'anglais
+• Esprit d'équipe et autonomie"></textarea>
+                            <small class="form-hint">Listez les compétences techniques et humaines recherchées</small>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-create-job-submit">
+                            {% if job_data %}
+                                ✏️ Modifier l'offre d'emploi
+                            {% else %}
+                                💼 Publier l'offre d'emploi
+                            {% endif %}
+                        </button>
+                        <a href="{{ url_for('entreprise') }}" class="btn-create-job-cancel">
+                            ← Retour à mon entreprise
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Job Board. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script/script.js') }}"></script>
+    <script>
+        // Gestion du formulaire de création/modification d'offre
+        document.addEventListener('DOMContentLoaded', function() {
+            const createJobForm = document.getElementById('createJobForm');
+            const isEdit = "{{ 'true' if job_data else 'false' }}";
+            const jobId = "{{ job_data.id_ad if job_data else 'null' }}";
+            
+            if (createJobForm) {
+                createJobForm.addEventListener('submit', async function(event) {
+                    event.preventDefault();
+                    
+                    const formData = new FormData(event.target);
+                    const jobData = Object.fromEntries(formData.entries());
+                    
+                    // Validation côté client
+                    if (!jobData.title || !jobData.short_description || !jobData.full_description) {
+                        alert('Veuillez remplir tous les champs obligatoires (*).');
+                        return;
+                    }
+                    
+                    // Conversion des salaires en nombres si renseignés
+                    if (jobData.salary_min) {
+                        jobData.salary_min = parseFloat(jobData.salary_min);
+                    }
+                    if (jobData.salary_max) {
+                        jobData.salary_max = parseFloat(jobData.salary_max);
+                    }
+                    
+                    // Vérification logique des salaires
+                    if (jobData.salary_min && jobData.salary_max && jobData.salary_min > jobData.salary_max) {
+                        alert('Le salaire minimum ne peut pas être supérieur au salaire maximum.');
+                        return;
+                    }
+                    
+                    try {
+                        const url = isEdit ? `/api/my-company/jobs/${jobId}` : '/api/my-company/jobs';
+                        const method = isEdit ? 'PUT' : 'POST';
+                        
+                        const response = await fetch(url, {
+                            method: method,
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(jobData)
+                        });
+                        
+                        if (response.ok) {
+                            const successMessage = isEdit ? 
+                                'Offre d\'emploi modifiée avec succès !' : 
+                                'Offre d\'emploi créée avec succès !';
+                            alert(successMessage);
+                            // Redirection vers la page entreprise
+                            window.location.href = "{{ url_for('entreprise') }}";
+                        } else {
+                            const error = await response.json();
+                            alert('Erreur: ' + (error.error || 'Impossible de ' + (isEdit ? 'modifier' : 'créer') + ' l\'offre'));
+                        }
+                    } catch (error) {
+                        console.error('Erreur lors de la ' + (isEdit ? 'modification' : 'création') + ' de l\'offre:', error);
+                        alert('Erreur de connexion. Veuillez réessayer.');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

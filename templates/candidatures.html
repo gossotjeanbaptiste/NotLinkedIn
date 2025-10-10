@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidatures - {{ job_info.title }} - NotLinkedIn</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/main.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icon/NotLinkedIn_icon.ico') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-logo">
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+                </a>
+            </div>
+            <nav class="nav-main">
+                <a href="{{ url_for('index') }}" class="nav-link">Accueil</a>
+                {% if session.user_id %}
+                    <a href="{{ url_for('profile') }}" class="nav-link">Mon Profil</a>
+                    <a href="{{ url_for('entreprise') }}" class="nav-link">Mon Entreprise</a>
+                    {% if session.is_admin %}
+                        <a href="{{ url_for('admin') }}" class="nav-link">Administration</a>
+                    {% endif %}
+                    <a href="{{ url_for('logout') }}" class="nav-link">Déconnexion</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="nav-link">Connexion</a>
+                    <a href="{{ url_for('register') }}" class="nav-link">Inscription</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="profile-container">
+            <div class="profile-section profile-section-full-width">
+                <div class="breadcrumb">
+                    <a href="{{ url_for('entreprise') }}" class="breadcrumb-link">← Mon Entreprise</a>
+                </div>
+                
+                <h2 class="profile-section-title">👥 Candidatures reçues</h2>
+                
+                <div class="job-info-card">
+                    <h3 class="job-title">💼 {{ job_info.title }}</h3>
+                    <div class="job-meta">
+                        <span class="company-name">🏢 {{ job_info.company_name }}</span>
+                        {% if job_info.location %}
+                            <span class="job-location">📍 {{ job_info.location }}</span>
+                        {% endif %}
+                        <span class="job-type">💼 {{ job_info.work_time|replace('_', ' ')|title }}</span>
+                    </div>
+                    {% if job_info.short_description %}
+                        <p class="job-description">{{ job_info.short_description }}</p>
+                    {% endif %}
+                </div>
+
+                {% if applications %}
+                    <div class="candidatures-stats">
+                        <h4>📊 Statistiques</h4>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-number">{{ applications|length }}</div>
+                                <div class="stat-label">Candidatures totales</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">{{ applications|selectattr('status', 'equalto', 'pending')|list|length }}</div>
+                                <div class="stat-label">En attente</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">{{ applications|selectattr('status', 'equalto', 'reviewed')|list|length }}</div>
+                                <div class="stat-label">Examinées</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">{{ applications|selectattr('status', 'equalto', 'accepted')|list|length }}</div>
+                                <div class="stat-label">Acceptées</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">{{ applications|selectattr('status', 'equalto', 'rejected')|list|length }}</div>
+                                <div class="stat-label">Refusées</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="candidatures-list">
+                        <h4>📋 Liste des candidatures</h4>
+                        {% for application in applications %}
+                            <div class="application-card">
+                                <div class="application-header">
+                                    <div class="applicant-info">
+                                        <h4 class="applicant-name">{{ application.first_name }} {{ application.surname }}</h4>
+                                        <div class="applicant-contact">
+                                            <span class="applicant-email">📧 {{ application.email }}</span>
+                                            {% if application.phone %}
+                                                <span class="applicant-phone">📱 {{ application.phone }}</span>
+                                            {% endif %}
+                                        </div>
+                                        {% if application.address_street or application.address_city %}
+                                            <div class="applicant-address">
+                                                📍 {% if application.address_street %}{{ application.address_street }}{% endif %}{% if application.address_street and application.address_city %}, {% endif %}{% if application.address_city %}{{ application.address_city }}{% endif %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="application-status">
+                                        <span class="status-badge {% if application.status == 'pending' %}status-en_attente{% elif application.status == 'reviewed' %}status-reviewed{% elif application.status == 'accepted' %}status-acceptee{% elif application.status == 'rejected' %}status-refusee{% else %}status-en_attente{% endif %}">
+                                            {% if application.status == 'pending' %}
+                                                ⏳ En attente
+                                            {% elif application.status == 'reviewed' %}
+                                                👀 Examinée
+                                            {% elif application.status == 'accepted' %}
+                                                ✅ Acceptée
+                                            {% elif application.status == 'rejected' %}
+                                                ❌ Refusée
+                                            {% else %}
+                                                ⏳ En attente
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="application-details">
+                                    {% if application.message %}
+                                        <div class="application-message">
+                                            <h5>💬 Message de motivation</h5>
+                                            <p>{{ application.message }}</p>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <div class="application-meta">
+                                        <span class="application-date">
+                                            📅 Candidature envoyée le {{ application.application_date.strftime('%d/%m/%Y à %H:%M') }}
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="application-actions">
+                                    <label for="status-{{ application.id_application }}" class="action-label">
+                                        Statut de la candidature :
+                                    </label>
+                                    <select 
+                                        id="status-{{ application.id_application }}"
+                                        onchange="updateApplicationStatus('{{ application.id_application }}', this.value)" 
+                                        class="status-select">
+                                        <option value="pending" {% if application.status == 'pending' %}selected{% endif %}>⏳ En attente</option>
+                                        <option value="reviewed" {% if application.status == 'reviewed' %}selected{% endif %}>👀 Examiner</option>
+                                        <option value="accepted" {% if application.status == 'accepted' %}selected{% endif %}>✅ Accepter</option>
+                                        <option value="rejected" {% if application.status == 'rejected' %}selected{% endif %}>❌ Refuser</option>
+                                    </select>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="no-applications">
+                        <div class="no-applications-icon">📋</div>
+                        <h3>Aucune candidature reçue</h3>
+                        <p>Cette offre d'emploi n'a pas encore reçu de candidatures.</p>
+                        <p>Les candidatures apparaîtront ici dès qu'elles seront soumises.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 NotLinkedIn. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='script/profile.js') }}"></script>
+    <script>
+        // Fonction pour mettre à jour le statut d'une candidature
+        window.updateApplicationStatus = function(applicationId, newStatus) {
+            fetch(`/api/my-company/applications/${applicationId}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: newStatus })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Mettre à jour le badge de statut
+                    const statusBadge = document.querySelector(`#status-${applicationId}`).closest('.application-card').querySelector('.status-badge');
+                    
+                    // Mapper les statuts backend vers les classes CSS existantes
+                    if (newStatus === 'pending') {
+                        statusBadge.className = 'status-badge status-en_attente';
+                        statusBadge.textContent = '⏳ En attente';
+                    } else if (newStatus === 'reviewed') {
+                        statusBadge.className = 'status-badge status-reviewed';
+                        statusBadge.textContent = '👀 Examinée';
+                    } else if (newStatus === 'accepted') {
+                        statusBadge.className = 'status-badge status-acceptee';
+                        statusBadge.textContent = '✅ Acceptée';
+                    } else if (newStatus === 'rejected') {
+                        statusBadge.className = 'status-badge status-refusee';
+                        statusBadge.textContent = '❌ Refusée';
+                    }
+                    
+                    // Optionnel : actualiser les statistiques
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    alert('Erreur lors de la mise à jour du statut: ' + (data.error || 'Erreur inconnue'));
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                alert('Erreur lors de la mise à jour du statut');
+            });
+        };
+    </script>
+</body>
+</html>
