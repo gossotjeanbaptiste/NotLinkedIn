@@ -13,3 +13,6 @@ install: venv
 # Création de l'environnement virtuel
 venv:
 	python3 -m venv venv
+
+delete:
+	mysql -u jobboard -pjobboard123 -e "DROP DATABASE IF EXISTS job_board;"
