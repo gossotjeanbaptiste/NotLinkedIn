@@ -1,0 +1,6 @@
+# Normaliser les fins de ligne pour éviter les erreurs $'\r' sous Linux/WSL
+* text=auto eol=lf
+
+# Forcer LF pour les scripts shell et Makefiles
+*.sh text eol=lf
+Makefile text eol=lf

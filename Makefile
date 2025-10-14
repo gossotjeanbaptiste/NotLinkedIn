@@ -1,18 +1,13 @@
 # Makefile pour NotLinkedIn
 
-.PHONY: run db install venv
+.PHONY: run db clean
 
-run: db install
-	. venv/bin/activate && flask run
+run: db
+	@python3 -c "import flask, mysql.connector" 2>/dev/null || (echo "Installation des dépendances..." && pip3 install --user -r requirements.txt)
+	python3 app.py
 
 db:
-	bash create_mysql_user_sudo.sh
+	bash setup_db_auto.sh
 
-install: venv
-	. venv/bin/activate && pip install -r requirements.txt
-# Création de l'environnement virtuel
-venv:
-	python3 -m venv venv
-
-delete:
-	mysql -u jobboard -pjobboard123 -e "DROP DATABASE IF EXISTS job_board;"
+clean:
+	mysql -u jobboard -pjobboard123 -e "DROP DATABASE IF EXISTS job_board;" 2>/dev/null || true
