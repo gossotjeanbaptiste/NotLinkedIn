@@ -166,7 +166,6 @@ main {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: var(--spacing-lg);
-    margin-top: var(--spacing-2xl);
 }
 
 .stats-grid {

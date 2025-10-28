@@ -114,3 +114,166 @@
         margin-bottom: var(--space-4) !important;
     }
 }
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .job-title {
+        font-size: 1.3rem;
+    }
+    
+    .candidatures-stats h4,
+    .candidatures-list h4 {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .job-info-card {
+        padding: 1.5rem;
+    }
+    
+    .job-title {
+        font-size: 1.4rem;
+    }
+    
+    .job-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .candidatures-stats h4,
+    .candidatures-list h4 {
+        font-size: 1.2rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .application-card {
+        padding: 1.5rem;
+    }
+    
+    .application-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .applicant-contact {
+        flex-direction: column;
+    }
+    
+    .application-actions {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+    }
+    
+    .status-select {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .create-job-container {
+        padding: 15px 10px;
+    }
+    
+    .create-job-header {
+        padding: 20px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .create-job-form-container {
+        padding: 20px;
+    }
+    
+    .create-job-form .form-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .btn-create-job-submit,
+    .btn-create-job-cancel {
+        width: 100%;
+        justify-content: center;
+        padding: 12px 20px;
+    }
+    
+    .create-job-title {
+        font-size: 1.5em;
+    }
+    
+    .create-job-subtitle {
+        font-size: 1.2em;
+    }
+    
+    .form-section-title {
+        font-size: 1.1em;
+    }
+}
+
+@media (max-width: 768px) {
+    .company-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .company-details {
+        grid-template-columns: 1fr;
+    }
+    
+    .job-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .job-right {
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .job-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .job-meta {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .application-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .applications-modal .modal-content {
+        margin: 20px;
+        max-width: none;
+    }
+    
+    .jobs-section-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+}

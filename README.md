@@ -83,7 +83,6 @@ git clone <repository-url>
 cd NotLinkedIn
 ```
 
-
 ### 2. Installation rapide avec Makefile
 
 ```bash
@@ -92,6 +91,7 @@ make install   # Installe les dépendances
 make db        # Crée la base et l'utilisateur MySQL automatiquement
 make run       # Lance l'application Flask
 ```
+
 Ou alors
 
 ```bash
@@ -103,22 +103,30 @@ L'application sera disponible sur `http://localhost:5000`
 ### 3. Installation manuelle (optionnel)
 
 1. Créez l'environnement virtuel :
+
     ```bash
     python3 -m venv venv
     source venv/bin/activate
     ```
+
 2. Installez les dépendances :
+
     ```bash
     pip install -r requirements.txt
     ```
+
 3. Créez la base et l'utilisateur MySQL :
+
     ```bash
     bash create_mysql_user_sudo.sh
     ```
+
 4. Si besoin, exécutez le script SQL :
+
     ```bash
     mysql -u jobboard -p job_board < database.sql
     ```
+
 5. Configurez la connexion dans `app.py` si nécessaire.
 
 ## 👤 Comptes de test
@@ -143,7 +151,6 @@ Les comptes suivants sont créés automatiquement :
 
 ## 🏗️ Structure du projet
 
-
 ```text
 NotLinkedIn/
 ├── app.py                      # Application Flask principale
@@ -161,7 +168,7 @@ NotLinkedIn/
 ├── static/
 │   ├── style/                  # Feuilles de style CSS
 │   ├── style/                  # Feuilles de style CSS
-+│   │   ├── admin.css
+│   │   ├── admin.css
 │   │   ├── auth.css
 │   │   ├── base.css
 │   │   ├── components.css
@@ -221,8 +228,8 @@ NotLinkedIn/
 
 ### Tables principales
 
+**companies :**
 
-**companies**
 - id_company
 - name
 - address
@@ -230,7 +237,8 @@ NotLinkedIn/
 - website
 - created_at
 
-**people**
+**people :**
+
 - id_people
 - first_name
 - surname
@@ -246,7 +254,8 @@ NotLinkedIn/
 - is_admin
 - created_at
 
-**advertisements**
+**advertisements :**
+
 - id_ad
 - title
 - short_description
@@ -261,7 +270,8 @@ NotLinkedIn/
 - updated_at
 - is_active
 
-**job_applications**
+**job_applications :**
+
 - id_application
 - id_ad
 - id_people

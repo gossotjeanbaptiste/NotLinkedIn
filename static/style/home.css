@@ -164,7 +164,7 @@
 
 /* ====== LISTE DES JOBS ====== */
 .jobs-section {
-    margin: var(--spacing-3xl) 0;
+    margin: var(--spacing-xl) 0;
 }
 
 .jobs-header {
@@ -447,6 +447,168 @@
 
 .animate-in {
     animation: slideInUp 0.6s ease forwards;
+}
+
+/* ====== JOB DETAILS - DESIGN LISIBLE ====== */
+
+/* Container principal des détails d'offre */
+.job-details {
+    background: rgba(20, 25, 35, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-xl);
+    margin-top: var(--spacing-lg);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    max-height: 70vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #667eea rgba(255, 255, 255, 0.1);
+}
+
+/* Styles pour la scrollbar */
+.job-details::-webkit-scrollbar {
+    width: 8px;
+}
+
+.job-details::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.job-details::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.job-details::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #5a6fd8 0%, #6a4190 100%);
+}
+
+.job-details h4 {
+    color: #ffffff;
+    font-size: var(--font-lg);
+    font-weight: 600;
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: var(--spacing-md);
+    text-align: center;
+}
+
+/* Section de détail individuelle */
+.detail-section {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: var(--spacing-ms);
+    margin-bottom: var(--spacing-ms);
+    transition: all 0.2s ease;
+}
+
+.detail-section:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+.detail-section:last-child {
+    margin-bottom: 0;
+}
+
+/* Label des détails */
+.detail-label {
+    display: block;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: var(--spacing-sm);
+    background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Valeur des détails */
+.detail-value {
+    color: #f8f9fa;
+    font-size: 1rem;
+    line-height: 1.6;
+    font-weight: 400;
+    background: rgba(0, 0, 0, 0.2);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 6px;
+    border-left: 4px solid #667eea;
+}
+
+/* Liens dans les valeurs */
+.detail-value a {
+    color: #4fc3f7;
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid #4fc3f7;
+    transition: all 0.2s ease;
+}
+
+.detail-value a:hover {
+    color: #81d4fa;
+    border-bottom-color: #81d4fa;
+    background: rgba(79, 195, 247, 0.1);
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+/* Animation d'apparition */
+.job-details.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    max-height: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
+    overflow: hidden;
+}
+
+.job-details:not(.hidden) {
+    animation: slideDown 0.4s ease forwards;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 1000px;
+    }
+}
+
+/* Responsive design pour les détails */
+@media (max-width: 768px) {
+    .job-details {
+        padding: var(--spacing-lg);
+        margin: var(--spacing-md) 0;
+    }
+    
+    .detail-section {
+        padding: var(--spacing-md);
+    }
+    
+    .detail-label {
+        font-size: 0.8rem;
+    }
+    
+    .detail-value {
+        font-size: 0.9rem;
+    }
 }
 
 /* ====== CHARGEMENT SKELETON ====== */
