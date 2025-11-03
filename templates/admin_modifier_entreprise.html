@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier une entreprise - Administration</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/admin.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icon/NotLinkedIn_icon.ico') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-logo">
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+                </a>
+            </div>
+            <nav class="nav-main">
+                <a href="{{ url_for('index') }}" class="nav-link">Accueil</a>
+                <a href="{{ url_for('admin') }}" class="nav-link">Administration</a>
+                <a href="{{ url_for('logout') }}" class="nav-link">Déconnexion</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="admin-form-page">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <a href="{{ url_for('admin') }}">Administration</a>
+                <span class="breadcrumb-separator">/</span>
+                <span class="breadcrumb-current">Modifier une entreprise</span>
+            </div>
+
+            <div class="form-container">
+                <div class="form-card">
+                    <h1 class="form-title">🏢 Modifier une entreprise</h1>
+                    <p class="form-subtitle" id="companyNameDisplay">Chargement...</p>
+
+                    <form id="companyForm" class="admin-form">
+                        <!-- Nom et Informations de base -->
+                        <div class="form-section">
+                            <h3 class="section-title">Informations générales</h3>
+                            
+                            <div class="form-group">
+                                <label for="company_name" class="form-label">Nom de l'entreprise <span class="required">*</span></label>
+                                <input 
+                                    type="text" 
+                                    id="company_name" 
+                                    name="name" 
+                                    class="form-control" 
+                                    placeholder="Exemple: TechCorp"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="company_website" class="form-label">Site web</label>
+                                <input 
+                                    type="url" 
+                                    id="company_website" 
+                                    name="website" 
+                                    class="form-control" 
+                                    placeholder="https://www.exemple.com"
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="company_description" class="form-label">Description</label>
+                                <textarea 
+                                    id="company_description" 
+                                    name="description" 
+                                    class="form-control" 
+                                    rows="4"
+                                    placeholder="Décrivez l'entreprise et ses activités..."
+                                ></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Adresse -->
+                        <div class="form-section">
+                            <h3 class="section-title">Adresse</h3>
+                            
+                            <div class="form-group">
+                                <label for="address_street" class="form-label">Rue</label>
+                                <input 
+                                    type="text" 
+                                    id="address_street" 
+                                    name="address_street" 
+                                    class="form-control" 
+                                    placeholder="123 rue de l'Entreprise"
+                                >
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="address_postal_code" class="form-label">Code postal</label>
+                                    <input 
+                                        type="text" 
+                                        id="address_postal_code" 
+                                        name="address_postal_code" 
+                                        class="form-control" 
+                                        placeholder="75015"
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="address_city" class="form-label">Ville</label>
+                                    <input 
+                                        type="text" 
+                                        id="address_city" 
+                                        name="address_city" 
+                                        class="form-control" 
+                                        placeholder="Paris"
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="address_department" class="form-label">Département</label>
+                                    <input 
+                                        type="text" 
+                                        id="address_department" 
+                                        name="address_department" 
+                                        class="form-control" 
+                                        placeholder="Paris"
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="address_country" class="form-label">Pays</label>
+                                    <input 
+                                        type="text" 
+                                        id="address_country" 
+                                        name="address_country" 
+                                        class="form-control" 
+                                        placeholder="France"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Secteur et Taille -->
+                        <div class="form-section">
+                            <h3 class="section-title">Caractéristiques</h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="company_sector" class="form-label">Secteur d'activité</label>
+                                    <select id="company_sector" name="sector" class="form-control">
+                                        <option value="">Sélectionner un secteur</option>
+                                        <option value="Technologie">Technologie</option>
+                                        <option value="Finance">Finance</option>
+                                        <option value="Santé">Santé</option>
+                                        <option value="Éducation">Éducation</option>
+                                        <option value="Commerce">Commerce</option>
+                                        <option value="Industrie">Industrie</option>
+                                        <option value="Services numériques">Services numériques</option>
+                                        <option value="Intelligence artificielle">Intelligence artificielle</option>
+                                        <option value="Énergie">Énergie</option>
+                                        <option value="Autre">Autre</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="company_size" class="form-label">Taille de l'entreprise</label>
+                                    <select id="company_size" name="company_size" class="form-control">
+                                        <option value="">Sélectionner une taille</option>
+                                        <option value="1-10">1-10 employés</option>
+                                        <option value="11-50">11-50 employés</option>
+                                        <option value="51-200">51-200 employés</option>
+                                        <option value="201-1000">201-1000 employés</option>
+                                        <option value="1000+">1000+ employés</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Boutons d'action -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-large">
+                                ✅ Mettre à jour
+                            </button>
+                            <a href="{{ url_for('admin') }}" class="btn btn-outline">
+                                ← Retour
+                            </a>
+                            <button type="button" class="btn btn-danger" id="deleteBtn">
+                                🗑️ Supprimer
+                            </button>
+                        </div>
+                    </form>
+
+                    <div id="successMessage" class="success-message hidden">
+                        <div class="success-icon">✓</div>
+                        <h3>Entreprise mise à jour avec succès !</h3>
+                        <p>Les modifications ont été enregistrées.</p>
+                        <a href="{{ url_for('admin') }}" class="btn btn-primary">
+                            Retour à l'administration
+                        </a>
+                    </div>
+
+                    <div id="errorMessage" class="error-message hidden">
+                        <div class="error-icon">✗</div>
+                        <h3>Erreur lors de la mise à jour</h3>
+                        <p id="errorText"></p>
+                        <button class="btn btn-primary" onclick="document.getElementById('errorMessage').classList.add('hidden')">
+                            Réessayer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Job Board. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Get company ID from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const companyId = urlParams.get('id');
+
+        if (!companyId) {
+            window.location.href = '{{ url_for("admin") }}';
+        }
+
+        // Load company data
+        async function loadCompanyData() {
+            try {
+                const response = await fetch(`/api/companies/${companyId}`);
+                const company = await response.json();
+
+                // Populate form
+                document.getElementById('company_name').value = company.name || '';
+                document.getElementById('company_website').value = company.website || '';
+                document.getElementById('company_description').value = company.description || '';
+                document.getElementById('address_street').value = company.address_street || '';
+                document.getElementById('address_postal_code').value = company.address_postal_code || '';
+                document.getElementById('address_city').value = company.address_city || '';
+                document.getElementById('address_department').value = company.address_department || '';
+                document.getElementById('address_country').value = company.address_country || 'France';
+                document.getElementById('company_sector').value = company.sector || '';
+                document.getElementById('company_size').value = company.company_size || '';
+                document.getElementById('companyNameDisplay').textContent = company.name;
+            } catch (error) {
+                console.error('Error loading company:', error);
+                alert('Erreur lors du chargement de l\'entreprise');
+                window.location.href = '{{ url_for("admin") }}';
+            }
+        }
+
+        document.getElementById('companyForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch(`/api/companies/${companyId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('companyForm').classList.add('hidden');
+                    document.getElementById('successMessage').classList.remove('hidden');
+                    window.scrollTo(0, 0);
+                } else {
+                    document.getElementById('errorText').textContent = result.error || 'Erreur lors de la mise à jour';
+                    document.getElementById('errorMessage').classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('errorText').textContent = 'Erreur réseau. Veuillez réessayer.';
+                document.getElementById('errorMessage').classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('deleteBtn').addEventListener('click', async function() {
+            if (!confirm('Êtes-vous sûr de vouloir supprimer cette entreprise ? Cette action est irréversible.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/companies/${companyId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    alert('Entreprise supprimée avec succès');
+                    window.location.href = '{{ url_for("admin") }}';
+                } else {
+                    const result = await response.json();
+                    alert(result.error || 'Erreur lors de la suppression');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Erreur réseau. Veuillez réessayer.');
+            }
+        });
+
+        // Load data on page load
+        loadCompanyData();
+    </script>
+</body>
+</html>

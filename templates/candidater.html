@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidater - {{ ad.title }} - NotLinkedIn</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/candidater.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icon/NotLinkedIn_icon.ico') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-logo">
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+                </a>
+            </div>
+            <nav class="nav-main">
+                <a href="{{ url_for('index') }}" class="nav-link">Accueil</a>
+                {% if session.user_id %}
+                    {% if session.is_admin %}
+                        <a href="{{ url_for('admin') }}" class="nav-link">Administration</a>
+                    {% else %}
+                        <a href="{{ url_for('profile') }}" class="nav-link">Mon Profil</a>
+                    {% endif %}
+                    <a href="{{ url_for('logout') }}" class="nav-link">Déconnexion</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="nav-link">Connexion</a>
+                    <a href="{{ url_for('register') }}" class="nav-link">Inscription</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="application-page">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <a href="{{ url_for('index') }}">Accueil</a>
+                <span class="breadcrumb-separator">/</span>
+                <span class="breadcrumb-current">Candidature</span>
+            </div>
+
+            <div class="application-container">
+                <!-- Left Side: Job Information -->
+                <div class="application-info">
+                    <div class="job-info-card">
+                        <h1 class="job-title-large">{{ ad.title }}</h1>
+                        
+                        <div class="company-info-section">
+                            <h2 class="company-name">{{ ad.company_name }}</h2>
+                            <p class="company-description">{{ ad.company_description or 'Pas de description disponible' }}</p>
+                        </div>
+
+                        <div class="job-details-grid">
+                            <div class="detail-item">
+                                <span class="detail-label">📍 Lieu</span>
+                                <span class="detail-value">{{ ad.location }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">⏰ Type de contrat</span>
+                                <span class="detail-value">{{ ad.work_time|replace('_', ' ')|title }}</span>
+                            </div>
+                            {% if ad.salary_min and ad.salary_max %}
+                            <div class="detail-item">
+                                <span class="detail-label">💰 Salaire</span>
+                                <span class="detail-value">{{ ad.salary_min }}€ - {{ ad.salary_max }}€</span>
+                            </div>
+                            {% endif %}
+                            <div class="detail-item">
+                                <span class="detail-label">📅 Publié le</span>
+                                <span class="detail-value">{{ ad.created_at.strftime('%d/%m/%Y') if ad.created_at else 'Récemment' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="job-description-section">
+                            <h3 class="section-title">Description du poste</h3>
+                            <p class="description-text">{{ ad.description or 'Pas de description disponible' }}</p>
+                        </div>
+
+                        <div class="job-skills-section">
+                            <h3 class="section-title">Compétences requises</h3>
+                            <p class="skills-text">{{ ad.required_skills or 'Non spécifiées' }}</p>
+                        </div>
+
+                        <div class="company-contact-section">
+                            <h3 class="section-title">Informations sur l'entreprise</h3>
+                            <div class="company-details-grid">
+                                <div class="detail-item">
+                                    <span class="detail-label">🌐 Site web</span>
+                                    <span class="detail-value">
+                                        {% if ad.company_website %}
+                                            <a href="{{ ad.company_website }}" target="_blank">{{ ad.company_website }}</a>
+                                        {% else %}
+                                            Non renseigné
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">🏭 Secteur</span>
+                                    <span class="detail-value">{{ ad.company_sector or 'Non renseigné' }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">👥 Taille</span>
+                                    <span class="detail-value">{{ ad.company_size or 'Non renseignée' }}</span>
+                                </div>
+                                {% if ad.company_address %}
+                                <div class="detail-item">
+                                    <span class="detail-label">📍 Adresse</span>
+                                    <span class="detail-value">{{ ad.company_address }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side: Application Form -->
+                <div class="application-form-container">
+                    <div class="form-card">
+                        <h2 class="form-title">Envoyez votre candidature</h2>
+                        <p class="form-subtitle">Dites-nous pourquoi vous êtes le candidat idéal pour ce poste</p>
+
+                        <form id="applicationForm" class="application-form">
+                            <input type="hidden" id="ad_id" name="ad_id" value="{{ ad.id_ad }}">
+
+                            {% if not session.user_id %}
+                            <div class="form-section">
+                                <h3 class="form-section-title">Vos informations</h3>
+                                
+                                <div class="form-group">
+                                    <label for="applicant_name" class="form-label">Nom complet <span class="required">*</span></label>
+                                    <input 
+                                        type="text" 
+                                        id="applicant_name" 
+                                        name="applicant_name" 
+                                        class="form-control" 
+                                        placeholder="Votre nom et prénom"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="applicant_email" class="form-label">Adresse email <span class="required">*</span></label>
+                                    <input 
+                                        type="email" 
+                                        id="applicant_email" 
+                                        name="applicant_email" 
+                                        class="form-control" 
+                                        placeholder="votre@email.com"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="applicant_phone" class="form-label">Téléphone</label>
+                                    <input 
+                                        type="tel" 
+                                        id="applicant_phone" 
+                                        name="applicant_phone" 
+                                        class="form-control" 
+                                        placeholder="0123456789"
+                                    >
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="form-info">
+                                <p class="info-text">✓ Vous êtes connecté en tant que <strong>{{ session.user_name }}</strong></p>
+                                <p class="info-text-small">Votre profil sera utilisé pour cette candidature</p>
+                            </div>
+                            {% endif %}
+
+                            <div class="form-section">
+                                <h3 class="form-section-title">Votre message de motivation</h3>
+                                
+                                <div class="form-group">
+                                    <label for="application_message" class="form-label">Message de motivation <span class="required">*</span></label>
+                                    <textarea 
+                                        id="application_message" 
+                                        name="message" 
+                                        rows="8"
+                                        class="form-control" 
+                                        placeholder="Expliquez pourquoi vous êtes le candidat idéal pour ce poste. Parlez de votre expérience, vos compétences et votre motivation..."
+                                        required
+                                    ></textarea>
+                                    <small class="form-hint">Minimum 50 caractères recommandés</small>
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="terms" name="terms" required>
+                                    <span>Je confirme que j'ai lu et compris les conditions d'utilisation</span>
+                                </label>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary btn-large">
+                                    📤 Envoyer ma candidature
+                                </button>
+                                <a href="{{ url_for('index') }}" class="btn btn-outline">
+                                    ← Retour à l'accueil
+                                </a>
+                            </div>
+
+                            <div class="form-notice">
+                                <p>⏱️ Nous traitons généralement les candidatures dans les 48 heures</p>
+                            </div>
+                        </form>
+
+                        <div id="successMessage" class="success-message hidden">
+                            <div class="success-icon">✓</div>
+                            <h3>Candidature envoyée avec succès !</h3>
+                            <p>Merci pour votre intérêt. L'entreprise vous contactera prochainement.</p>
+                            <a href="{{ url_for('index') }}" class="btn btn-primary">
+                                Retour à l'accueil
+                            </a>
+                        </div>
+
+                        <div id="errorMessage" class="error-message hidden">
+                            <div class="error-icon">✗</div>
+                            <h3>Erreur lors de l'envoi</h3>
+                            <p id="errorText"></p>
+                            <button class="btn btn-primary" onclick="document.getElementById('errorMessage').classList.add('hidden')">
+                                Réessayer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Job Board. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('applicationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            
+            try {
+                const response = await fetch('{{ url_for("apply_to_job") }}', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    document.getElementById('applicationForm').classList.add('hidden');
+                    document.getElementById('successMessage').classList.remove('hidden');
+                    window.scrollTo(0, 0);
+                } else {
+                    document.getElementById('errorText').textContent = result.error || 'Erreur lors de l\'envoi de la candidature';
+                    document.getElementById('errorMessage').classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('errorText').textContent = 'Erreur réseau. Veuillez réessayer.';
+                document.getElementById('errorMessage').classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -6,7 +6,11 @@ USE job_board;
 CREATE TABLE companies (
     id_company INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    address VARCHAR(500),
+    address_street VARCHAR(255),
+    address_postal_code VARCHAR(10),
+    address_city VARCHAR(100),
+    address_department VARCHAR(100),
+    address_country VARCHAR(100) DEFAULT 'France',
     description TEXT,
     website VARCHAR(255),
     logo_url VARCHAR(500) DEFAULT NULL,
@@ -65,6 +69,9 @@ CREATE TABLE job_applications (
     message TEXT,
     application_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status ENUM('pending', 'reviewed', 'accepted', 'rejected') DEFAULT 'pending',
+    is_deleted BOOLEAN DEFAULT FALSE,
+    deletion_reason VARCHAR(500),
+    deleted_at TIMESTAMP NULL,
     FOREIGN KEY (id_ad) REFERENCES advertisements(id_ad) ON DELETE CASCADE,
     FOREIGN KEY (id_people) REFERENCES people(id_people) ON DELETE CASCADE,
     UNIQUE KEY unique_application (id_ad, id_people)
@@ -75,13 +82,12 @@ CREATE TABLE job_applications (
 ALTER TABLE companies ADD FOREIGN KEY (created_by) REFERENCES people(id_people) ON DELETE SET NULL;
 
 -- Insert sample data
-INSERT INTO companies (name, address, description, website, sector, company_size) VALUES
-('TechCorp', '123 rue de la Tech, Paris', 'Entreprise leader dans les nouvelles technologies', 'https://www.techcorp.com', 'Technologie', '201-1000'),
-('WebAgency', '456 avenue du Web, Lyon', 'Agence spécialisée dans le développement web', 'https://www.webagency.fr', 'Services numériques', '11-50'),
-('StartupX', '789 boulevard Innovation, Marseille', 'Startup innovante dans l\'IA', 'https://www.startupx.io', 'Intelligence artificielle', '1-10'),
-('FinancePlus', '800 avenue de la Bourse, Paris', 'Cabinet de conseil en finance et audit', 'https://www.financeplus.fr', 'Finance', '51-200'),
-('GreenEnergy', '90 rue de l\'Énergie Verte, Nantes', 'Producteur d\'énergie renouvelable', 'https://www.green-energy.com', 'Énergie', '201-1000');
--- Les ID de ces nouvelles entreprises seront probablement 4 et 5.
+INSERT INTO companies (name, address_street, address_postal_code, address_city, address_department, address_country, description, website, sector, company_size) VALUES
+('TechCorp', '123 rue de la Tech', '75015', 'Paris', 'Paris', 'France', 'Entreprise leader dans les nouvelles technologies', 'https://www.techcorp.com', 'Technologie', '201-1000'),
+('WebAgency', '456 avenue du Web', '69000', 'Lyon', 'Rhône', 'France', 'Agence spécialisée dans le développement web', 'https://www.webagency.fr', 'Services numériques', '11-50'),
+('StartupX', '789 boulevard Innovation', '13000', 'Marseille', 'Bouches-du-Rhône', 'France', 'Startup innovante dans l\'IA', 'https://www.startupx.io', 'Intelligence artificielle', '1-10'),
+('FinancePlus', '800 avenue de la Bourse', '75002', 'Paris', 'Paris', 'France', 'Cabinet de conseil en finance et audit', 'https://www.financeplus.fr', 'Finance', '51-200'),
+('GreenEnergy', '90 rue de l\'Énergie Verte', '44000', 'Nantes', 'Loire-Atlantique', 'France', 'Producteur d\'énergie renouvelable', 'https://www.green-energy.com', 'Énergie', '201-1000');
 
 INSERT INTO people (first_name, surname, email, phone, login, password, is_admin) VALUES
 ('Admin', 'User', 'admin@jobboard.com', '0123456789', 'admin', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', TRUE),

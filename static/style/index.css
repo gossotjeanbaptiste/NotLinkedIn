@@ -1,8 +1,8 @@
-/* ================== HOME - PORTFOLIO STYLE ================== */
-/* Styles pour la page d'accueil du job board avec design portfolio */
+@import url('general.css');
+@import url('variables.css');
 
 /* ====== HERO SECTION ====== */
-.hero {
+.hero-section {
     padding: var(--spacing-3xl) 0;
     text-align: center;
     background: radial-gradient(ellipse at center, var(--white-08) 0%, transparent 70%);
@@ -16,24 +16,26 @@
     padding: 0 var(--spacing-lg);
 }
 
-.hero h1 {
+.hero-title {
     font-size: clamp(2.5rem, 6vw, 4rem);
     font-weight: 300;
     margin-bottom: var(--spacing-lg);
-    background: var(--rainbow-gradient);
+    background: var(--white-8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     background-size: 300% 300%;
     animation: rainbow 3s ease infinite;
     line-height: 1.2;
+    margin: 0;
 }
 
-.hero-description {
+.hero-subtitle {
     font-size: var(--font-lg);
     color: var(--white-8);
     margin-bottom: var(--spacing-2xl);
     line-height: 1.6;
+    margin: 0;
 }
 
 .hero-stats {
@@ -114,7 +116,7 @@
     border: 2px solid var(--white-2);
     border-radius: var(--border-radius-pill);
     color: var(--white);
-    font-family: "Bitcount", sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-size: var(--font-base);
     transition: var(--transition-smooth);
 }
@@ -152,7 +154,7 @@
     border: 1px solid var(--white-2);
     border-radius: var(--border-radius-small);
     color: var(--white);
-    font-family: "Bitcount", sans-serif;
+    font-family: "Montserrat", sans-serif;
     transition: var(--transition-fast);
 }
 
@@ -203,7 +205,7 @@
     border: 1px solid var(--white-2);
     border-radius: var(--border-radius-small);
     color: var(--white);
-    font-family: "Bitcount", sans-serif;
+    font-family: "Montserrat", sans-serif;
 }
 
 .jobs-grid {
@@ -263,7 +265,7 @@
 }
 
 .job-company-name {
-    color: var(--white-8);
+    color: rgba(255, 255, 255, 0.75);
     font-size: var(--font-sm);
     margin: 0;
 }
@@ -281,12 +283,12 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
-    color: var(--white-8);
+    color: rgba(255, 255, 255, 0.80);
     font-size: var(--font-md);
 }
 
 .job-description {
-    color: var(--white-8);
+    color: rgba(255, 255, 255, 0.85);
     line-height: 1.6;
     margin: var(--spacing-md) 0;
     display: -webkit-box;
@@ -308,7 +310,7 @@
 
 .job-tag {
     background: var(--white-15);
-    color: var(--white-8);
+    color: rgba(255, 255, 255, 0.80);
     padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--border-radius-pill);
     font-size: var(--font-sm);
@@ -325,7 +327,7 @@
 }
 
 .job-date {
-    color: var(--white-5);
+    color: rgba(255, 255, 255, 0.70);
     font-size: var(--font-sm);
 }
 

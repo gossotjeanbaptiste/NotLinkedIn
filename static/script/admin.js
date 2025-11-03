@@ -40,7 +40,7 @@ function showTab(tabName) {
             loadAdvertisements();
             break;
         case 'applications':
-            loadApplications();
+            loadAdminApplications();
             break;
     }
 }
@@ -107,7 +107,7 @@ function displayAdvertisements(advertisements) {
         </div>
     `).join('');
 }
-
+// DEPRECATED: Use loadAdminApplications() from admin_candidatures.js instead
 async function loadApplications(page = 1) {
     try {
         const response = await fetch(`/api/applications?page=${page}&per_page=10`);
@@ -120,6 +120,7 @@ async function loadApplications(page = 1) {
     }
 }
 
+// DEPRECATED: Use admin_candidatures.js instead
 function displayApplications(applications) {
     const container = document.getElementById('applications-list');
     container.innerHTML = applications.map(app => `
@@ -164,34 +165,7 @@ function changePage(type, page) {
 }
 
 function showAddCompanyForm() {
-    document.getElementById('modal-form-content').innerHTML = `
-        <h3>Ajouter une entreprise</h3>
-        <form id="companyForm" onsubmit="saveCompany(event)">
-            <div class="form-group">
-                <label>Nom:</label>
-                <input type="text" name="name" required>
-            </div>
-            <div class="form-group">
-                <label>Adresse:</label>
-                <input type="text" name="address">
-            </div>
-            <div class="form-group">
-                <label>Description:</label>
-                <textarea name="description" rows="3"></textarea>
-            </div>
-            <div class="form-group">
-                <label>Site web:</label>
-                <input type="url" name="website">
-            </div>
-            <div class="form-actions">
-                <button type="submit" class="btn btn-success">Enregistrer</button>
-                <button type="button" class="btn btn-secondary" onclick="closeAdminModal()">Annuler</button>
-            </div>
-        </form>
-    `;
-    const modal = document.getElementById('adminModal');
-    modal.classList.remove('hidden');
-    modal.style.display = 'block';
+    window.location.href = '/admin_ajouter_entreprise';
 }
 
 async function saveCompany(event) {
@@ -229,51 +203,8 @@ async function saveCompany(event) {
     }
 }
 
-async function editCompany(companyId) {
-    try {
-        // Récupérer les données de l'entreprise
-        const response = await fetch(`/api/companies/${companyId}`);
-        if (!response.ok) {
-            throw new Error('Impossible de charger les données de l\'entreprise');
-        }
-        
-        const company = await response.json();
-        
-        // Afficher le formulaire pré-rempli
-        document.getElementById('modal-form-content').innerHTML = `
-            <h3>Modifier l'entreprise</h3>
-            <form id="companyEditForm" onsubmit="updateCompany(event, ${companyId})">
-                <div class="form-group">
-                    <label>Nom:</label>
-                    <input type="text" name="name" value="${company.name || ''}" required>
-                </div>
-                <div class="form-group">
-                    <label>Adresse:</label>
-                    <input type="text" name="address" value="${company.address || ''}">
-                </div>
-                <div class="form-group">
-                    <label>Description:</label>
-                    <textarea name="description" rows="3">${company.description || ''}</textarea>
-                </div>
-                <div class="form-group">
-                    <label>Site web:</label>
-                    <input type="url" name="website" value="${company.website || ''}">
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-success">Mettre à jour</button>
-                    <button type="button" class="btn btn-secondary" onclick="closeAdminModal()">Annuler</button>
-                </div>
-            </form>
-        `;
-        
-        const modal = document.getElementById('adminModal');
-        modal.classList.remove('hidden');
-        modal.style.display = 'block';
-        
-    } catch (error) {
-        console.error('Error loading company:', error);
-        alert('Erreur lors du chargement des données de l\'entreprise');
-    }
+function editCompany(companyId) {
+    window.location.href = `/admin_modifier_entreprise?id=${companyId}`;
 }
 
 async function updateCompany(event, companyId) {
@@ -326,78 +257,8 @@ async function deleteCompany(id) {
     }
 }
 
-async function editAdvertisement(adId) {
-    try {
-        // Récupérer les données de l'annonce
-        const response = await fetch(`/api/advertisements/${adId}`);
-        if (!response.ok) {
-            throw new Error('Impossible de charger les données de l\'annonce');
-        }
-        
-        const advertisement = await response.json();
-        
-        // Afficher le formulaire pré-rempli
-        document.getElementById('modal-form-content').innerHTML = `
-            <h3>Modifier l'annonce</h3>
-            <form id="adEditForm" onsubmit="updateAdvertisement(event, ${adId})">
-                <div class="form-group">
-                    <label>Titre:</label>
-                    <input type="text" name="title" value="${advertisement.title || ''}" required>
-                </div>
-                <div class="form-group">
-                    <label>Entreprise:</label>
-                    <select name="company_id" required>
-                        <option value="">Sélectionner une entreprise</option>
-                        ${companiesList.map(company => 
-                            `<option value="${company.id_company}" ${company.id_company == advertisement.company_id ? 'selected' : ''}>${company.name}</option>`
-                        ).join('')}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Petite description:</label>
-                    <input type="text" name="short_description" maxlength="500" required value="${advertisement.short_description || ''}">
-                </div>
-                <div class="form-group">
-                    <label>Description complète:</label>
-                    <textarea name="full_description" rows="4" required>${advertisement.full_description || ''}</textarea>
-                </div>
-                <div class="form-group">
-                    <label>Localisation:</label>
-                    <input type="text" name="location" value="${advertisement.location || ''}">
-                </div>
-                <div class="form-group">
-                    <label>Salaire min:</label>
-                    <input type="number" name="salary_min" min="0" step="0.01" value="${advertisement.salary_min || ''}">
-                </div>
-                <div class="form-group">
-                    <label>Salaire max:</label>
-                    <input type="number" name="salary_max" min="0" step="0.01" value="${advertisement.salary_max || ''}">
-                </div>
-                <div class="form-group">
-                    <label>Type de contrat:</label>
-                    <select name="contract_type">
-                        <option value="">Sélectionner un type</option>
-                        <option value="full-time" ${advertisement.contract_type == 'full-time' ? 'selected' : ''}>Temps plein</option>
-                        <option value="part-time" ${advertisement.contract_type == 'part-time' ? 'selected' : ''}>Temps partiel</option>
-                        <option value="contract" ${advertisement.contract_type == 'contract' ? 'selected' : ''}>Contrat</option>
-                        <option value="internship" ${advertisement.contract_type == 'internship' ? 'selected' : ''}>Stage</option>
-                    </select>
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-success">Mettre à jour</button>
-                    <button type="button" class="btn btn-secondary" onclick="closeAdminModal()">Annuler</button>
-                </div>
-            </form>
-        `;
-        
-        const modal = document.getElementById('adminModal');
-        modal.classList.remove('hidden');
-        modal.style.display = 'block';
-        
-    } catch (error) {
-        console.error('Error loading advertisement:', error);
-        alert('Erreur lors du chargement des données de l\'annonce');
-    }
+function editAdvertisement(adId) {
+    window.location.href = `/admin_modifier_offre?id=${adId}`;
 }
 
 async function updateAdvertisement(event, adId) {
@@ -428,59 +289,7 @@ async function updateAdvertisement(event, adId) {
 }
 
 function showAddAdForm() {
-    document.getElementById('modal-form-content').innerHTML = `
-        <h3>Ajouter une annonce</h3>
-        <form id="adForm" onsubmit="saveAdvertisement(event)">
-            <div class="form-group">
-                <label>Titre:</label>
-                <input type="text" name="title" required>
-            </div>
-            <div class="form-group">
-                <label>Entreprise:</label>
-                <select name="company_id" required>
-                    <option value="">Sélectionner une entreprise</option>
-                    ${companiesList.map(company => `<option value="${company.id_company}">${company.name}</option>`).join('')}
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Petite description:</label>
-                <input type="text" name="short_description" maxlength="500" required>
-            </div>
-            <div class="form-group">
-                <label>Description complète:</label>
-                <textarea name="full_description" rows="4" required></textarea>
-            </div>
-            <div class="form-group">
-                <label>Localisation:</label>
-                <input type="text" name="location">
-            </div>
-            <div class="form-group">
-                <label>Salaire min:</label>
-                <input type="number" name="salary_min" min="0" step="0.01">
-            </div>
-            <div class="form-group">
-                <label>Salaire max:</label>
-                <input type="number" name="salary_max" min="0" step="0.01">
-            </div>
-            <div class="form-group">
-                <label>Type de contrat:</label>
-                <select name="contract_type">
-                    <option value="">Sélectionner un type</option>
-                    <option value="full-time">Temps plein</option>
-                    <option value="part-time">Temps partiel</option>
-                    <option value="contract">Contrat</option>
-                    <option value="internship">Stage</option>
-                </select>
-            </div>
-            <div class="form-actions">
-                <button type="submit" class="btn btn-success">Enregistrer</button>
-                <button type="button" class="btn btn-secondary" onclick="closeAdminModal()">Annuler</button>
-            </div>
-        </form>
-    `;
-    const modal = document.getElementById('adminModal');
-    modal.classList.remove('hidden');
-    modal.style.display = 'block';
+    window.location.href = '/admin_ajouter_offre';
 }
 
 async function saveAdvertisement(event) {

@@ -20,7 +20,8 @@ function initializeEventListeners() {
     applyBtns.forEach(btn => {
         btn.addEventListener('click', function() {
             const adId = this.getAttribute('data-ad-id');
-            openApplicationModal(adId);
+            // Redirect to application page
+            window.location.href = `/candidater/${adId}`;
         });
     });
 

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter une offre d'emploi - Administration</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/admin.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icon/NotLinkedIn_icon.ico') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-logo">
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+                </a>
+            </div>
+            <nav class="nav-main">
+                <a href="{{ url_for('index') }}" class="nav-link">Accueil</a>
+                <a href="{{ url_for('admin') }}" class="nav-link">Administration</a>
+                <a href="{{ url_for('logout') }}" class="nav-link">Déconnexion</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="admin-form-page">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <a href="{{ url_for('admin') }}">Administration</a>
+                <span class="breadcrumb-separator">/</span>
+                <span class="breadcrumb-current">Ajouter une offre d'emploi</span>
+            </div>
+
+            <div class="form-container">
+                <div class="form-card">
+                    <h1 class="form-title">💼 Ajouter une offre d'emploi</h1>
+                    <p class="form-subtitle">Remplissez les informations de la nouvelle offre</p>
+
+                    <form id="advertisementForm" class="admin-form">
+                        <!-- Informations de base -->
+                        <div class="form-section">
+                            <h3 class="section-title">Informations générales</h3>
+                            
+                            <div class="form-group">
+                                <label for="company_id" class="form-label">Entreprise <span class="required">*</span></label>
+                                <select id="company_id" name="company_id" class="form-control" required>
+                                    <option value="">Sélectionner une entreprise</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="title" class="form-label">Titre du poste <span class="required">*</span></label>
+                                <input 
+                                    type="text" 
+                                    id="title" 
+                                    name="title" 
+                                    class="form-control" 
+                                    placeholder="Exemple: Développeur Python"
+                                    required
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="location" class="form-label">Localisation</label>
+                                <input 
+                                    type="text" 
+                                    id="location" 
+                                    name="location" 
+                                    class="form-control" 
+                                    placeholder="Exemple: Paris (75), France"
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="form-section">
+                            <h3 class="section-title">Description de l'offre</h3>
+                            
+                            <div class="form-group">
+                                <label for="short_description" class="form-label">Courte description <span class="required">*</span></label>
+                                <input 
+                                    type="text" 
+                                    id="short_description" 
+                                    name="short_description" 
+                                    maxlength="500"
+                                    class="form-control" 
+                                    placeholder="Résumé de l'offre (max 500 caractères)"
+                                    required
+                                >
+                                <small class="form-hint" id="charCount">0/500</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description" class="form-label">Description complète <span class="required">*</span></label>
+                                <textarea 
+                                    id="description" 
+                                    name="description" 
+                                    class="form-control" 
+                                    rows="6"
+                                    placeholder="Description détaillée du poste, responsabilités, qualités requises..."
+                                    required
+                                ></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="required_skills" class="form-label">Compétences requises</label>
+                                <textarea 
+                                    id="required_skills" 
+                                    name="required_skills" 
+                                    class="form-control" 
+                                    rows="3"
+                                    placeholder="Listez les compétences requises..."
+                                ></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Détails de l'emploi -->
+                        <div class="form-section">
+                            <h3 class="section-title">Détails de l'emploi</h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="work_time" class="form-label">Type de contrat</label>
+                                    <select id="work_time" name="work_time" class="form-control">
+                                        <option value="">Sélectionner un type</option>
+                                        <option value="full_time">Temps plein</option>
+                                        <option value="part_time">Temps partiel</option>
+                                        <option value="contract">Contrat</option>
+                                        <option value="internship">Stage</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="salary_min" class="form-label">Salaire minimum (€)</label>
+                                    <input 
+                                        type="number" 
+                                        id="salary_min" 
+                                        name="salary_min" 
+                                        class="form-control" 
+                                        min="0"
+                                        step="100"
+                                        placeholder="Ex: 25000"
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="salary_max" class="form-label">Salaire maximum (€)</label>
+                                    <input 
+                                        type="number" 
+                                        id="salary_max" 
+                                        name="salary_max" 
+                                        class="form-control" 
+                                        min="0"
+                                        step="100"
+                                        placeholder="Ex: 35000"
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="is_active" class="form-label">Statut</label>
+                                    <select id="is_active" name="is_active" class="form-control">
+                                        <option value="true">Active</option>
+                                        <option value="false">Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Boutons d'action -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-large">
+                                ✅ Créer l'offre
+                            </button>
+                            <a href="{{ url_for('admin') }}" class="btn btn-outline">
+                                ← Retour
+                            </a>
+                        </div>
+                    </form>
+
+                    <div id="successMessage" class="success-message hidden">
+                        <div class="success-icon">✓</div>
+                        <h3>Offre d'emploi créée avec succès !</h3>
+                        <p>L'offre a été publiée sur la plateforme.</p>
+                        <a href="{{ url_for('admin') }}" class="btn btn-primary">
+                            Retour à l'administration
+                        </a>
+                    </div>
+
+                    <div id="errorMessage" class="error-message hidden">
+                        <div class="error-icon">✗</div>
+                        <h3>Erreur lors de la création</h3>
+                        <p id="errorText"></p>
+                        <button class="btn btn-primary" onclick="document.getElementById('errorMessage').classList.add('hidden')">
+                            Réessayer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Job Board. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Load companies
+        async function loadCompanies() {
+            try {
+                const response = await fetch('/api/companies?page=1&per_page=1000');
+                const data = await response.json();
+                
+                const select = document.getElementById('company_id');
+                data.companies.forEach(company => {
+                    const option = document.createElement('option');
+                    option.value = company.id_company;
+                    option.textContent = company.name;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading companies:', error);
+            }
+        }
+
+        // Character counter for short description
+        document.getElementById('short_description').addEventListener('input', function() {
+            document.getElementById('charCount').textContent = `${this.value.length}/500`;
+        });
+
+        document.getElementById('advertisementForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Convert boolean string
+            data.is_active = data.is_active === 'true';
+
+            try {
+                const response = await fetch('{{ url_for("advertisements_crud") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('advertisementForm').classList.add('hidden');
+                    document.getElementById('successMessage').classList.remove('hidden');
+                    window.scrollTo(0, 0);
+                } else {
+                    document.getElementById('errorText').textContent = result.error || 'Erreur lors de la création de l\'offre';
+                    document.getElementById('errorMessage').classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('errorText').textContent = 'Erreur réseau. Veuillez réessayer.';
+                document.getElementById('errorMessage').classList.remove('hidden');
+            }
+        });
+
+        // Load companies on page load
+        loadCompanies();
+    </script>
+</body>
+</html>

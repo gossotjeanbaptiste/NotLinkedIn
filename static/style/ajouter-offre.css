@@ -1,0 +1,207 @@
+@import url('./general.css');
+@import url('./variables.css');
+
+/* ================== AJOUTER OFFRE PAGE ================== */
+
+.create-offer-container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+    margin-top: 80px;
+}
+
+.create-offer-header {
+    background: var(--white-1);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--white-2);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+    text-align: center;
+    animation: fadeIn 0.6s ease;
+}
+
+.create-offer-title {
+    font-size: var(--font-lg);
+    color: var(--white);
+    margin: 0;
+    margin-bottom: var(--spacing-sm);
+}
+
+.create-offer-description {
+    color: var(--white-8);
+    margin: 0;
+}
+
+/* ====== FORM CONTAINER ====== */
+.create-offer-form-container {
+    background: var(--white-1);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--white-2);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-xl);
+    animation: fadeIn 0.8s ease 0.2s backwards;
+}
+
+.form-section {
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-xl);
+    border-bottom: 1px solid var(--white-2);
+}
+
+.form-section:last-of-type {
+    border-bottom: none;
+    margin-bottom: var(--spacing-lg);
+}
+
+.form-section-title {
+    font-size: var(--font-ml);
+    color: var(--white);
+    margin-bottom: var(--spacing-lg);
+    font-weight: 600;
+}
+
+.form-group {
+    margin-bottom: var(--spacing-lg);
+}
+
+.form-label {
+    display: block;
+    margin-bottom: var(--spacing-sm);
+    color: var(--white);
+    font-weight: 300;
+    font-size: var(--font-sm);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.form-control {
+    width: 100%;
+    padding: var(--spacing-md);
+    background: var(--white-08);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--white-2);
+    border-radius: var(--border-radius-small);
+    color: var(--white);
+    font-family: "Montserrat", sans-serif;
+    font-size: var(--font-base);
+    line-height: 1.6;
+    transition: var(--transition-smooth);
+    box-sizing: border-box;
+}
+
+.form-control::placeholder {
+    color: var(--white-5);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--white-5);
+    background: var(--white-15);
+    box-shadow: 0 0 0 3px var(--white-1);
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 150px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+}
+
+/* ====== FORM HINTS ====== */
+.form-hint {
+    display: block;
+    color: var(--white-8);
+    font-size: var(--font-sm);
+    margin-top: var(--spacing-xs);
+    font-style: italic;
+}
+
+/* ====== BUTTONS ====== */
+.form-buttons {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-xl);
+    border-top: 1px solid var(--white-2);
+}
+
+.btn {
+    background: transparent;
+    border: 2px solid var(--white-5);
+    color: var(--white-8);
+    border-radius: var(--border-radius-pill);
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-family: "Montserrat", sans-serif;
+    font-size: var(--font-sm);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: var(--transition-smooth);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn:hover {
+    background: var(--white-1);
+    border-color: var(--white);
+    color: var(--white);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-submit {
+    background: var(--rainbow-gradient);
+    background-size: 300% 300%;
+    animation: rainbow 3s ease infinite;
+    border: none;
+    color: var(--white);
+    min-width: 200px;
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-cancel {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.btn-cancel:hover {
+    background: rgba(220, 53, 69, 0.1);
+    border-color: #dc3545;
+    color: #ff6b6b;
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+    .create-offer-container {
+        padding: var(--spacing-lg);
+    }
+    
+    .create-offer-header,
+    .create-offer-form-container {
+        padding: var(--spacing-lg);
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-buttons {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}

@@ -277,7 +277,9 @@ def profile():
         # Get user information with company information
         cursor.execute("""
             SELECT p.*, c.id_company, c.name as company_name, c.description as company_description,
-                   c.website as company_website, c.address as company_address,
+                   c.website as company_website,
+                   CONCAT(c.address_street, ', ', c.address_postal_code, ' ', c.address_city) as company_address,
+                   c.address_street, c.address_postal_code, c.address_city, c.address_department, c.address_country,
                    c.sector as company_sector, c.company_size as company_size
             FROM people p
             LEFT JOIN companies c ON p.owned_company_id = c.id_company
@@ -339,7 +341,9 @@ def entreprise():
         # Get user information with company information
         cursor.execute("""
             SELECT p.*, c.id_company, c.name as company_name, c.description as company_description,
-                   c.website as company_website, c.address as company_address,
+                   c.website as company_website,
+                   CONCAT(c.address_street, ', ', c.address_postal_code, ' ', c.address_city) as company_address,
+                   c.address_street, c.address_postal_code, c.address_city, c.address_department, c.address_country,
                    c.sector as company_sector, c.company_size as company_size
             FROM people p
             LEFT JOIN companies c ON p.owned_company_id = c.id_company
@@ -632,6 +636,46 @@ def admin():
 
     return render_template('admin.html')
 
+
+@app.route("/admin_ajouter_entreprise")
+def admin_ajouter_entreprise():
+    """Page to add a company (admin)"""
+    if not session.get('is_admin'):
+        flash('Accès refusé', 'error')
+        return redirect(url_for('index'))
+
+    return render_template('admin_ajouter_entreprise.html')
+
+
+@app.route("/admin_modifier_entreprise")
+def admin_modifier_entreprise():
+    """Page to edit a company (admin)"""
+    if not session.get('is_admin'):
+        flash('Accès refusé', 'error')
+        return redirect(url_for('index'))
+
+    return render_template('admin_modifier_entreprise.html')
+
+
+@app.route("/admin_ajouter_offre")
+def admin_ajouter_offre():
+    """Page to add a job advertisement (admin)"""
+    if not session.get('is_admin'):
+        flash('Accès refusé', 'error')
+        return redirect(url_for('index'))
+
+    return render_template('admin_ajouter_offre.html')
+
+
+@app.route("/admin_modifier_offre")
+def admin_modifier_offre():
+    """Page to edit a job advertisement (admin)"""
+    if not session.get('is_admin'):
+        flash('Accès refusé', 'error')
+        return redirect(url_for('index'))
+
+    return render_template('admin_modifier_offre.html')
+
 # ============= API ENDPOINTS =============
 
 
@@ -645,7 +689,9 @@ def get_advertisement_details(ad_id):
     try:
         cursor = connection.cursor(dictionary=True)
         query = """
-            SELECT a.*, c.name as company_name, c.address as company_address, 
+            SELECT a.*, c.name as company_name, 
+                   CONCAT(c.address_street, ', ', c.address_postal_code, ' ', c.address_city) as company_address,
+                   c.address_street, c.address_postal_code, c.address_city, c.address_department, c.address_country,
                    c.description as company_description, c.website as company_website,
                    p.first_name, p.surname 
             FROM advertisements a 
@@ -665,6 +711,60 @@ def get_advertisement_details(ad_id):
     except Error as e:
         print(f"Error fetching advertisement details: {e}")
         return jsonify({"error": "Database error"}), 500
+
+
+@app.route("/candidater/<int:ad_id>")
+def apply_job_page(ad_id):
+    """Display application page for a specific job"""
+    if not session.get('user_id'):
+        flash('Vous devez être connecté pour postuler', 'info')
+        return redirect(url_for('login'))
+
+    connection = get_db_connection()
+    if connection is None:
+        flash('Erreur de connexion à la base de données', 'error')
+        return redirect(url_for('index'))
+
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = """
+            SELECT a.*, c.name as company_name, 
+                   CONCAT(c.address_street, ', ', c.address_postal_code, ' ', c.address_city) as company_address,
+                   c.address_street, c.address_postal_code, c.address_city, c.address_department, c.address_country,
+                   c.description as company_description, c.website as company_website, c.sector as company_sector, c.company_size,
+                   p.first_name, p.surname 
+            FROM advertisements a 
+            JOIN companies c ON a.company_id = c.id_company 
+            LEFT JOIN people p ON a.posted_by = p.id_people 
+            WHERE a.id_ad = %s AND a.is_active = TRUE
+        """
+        cursor.execute(query, (ad_id,))
+        ad = cursor.fetchone()
+        cursor.close()
+        connection.close()
+
+        if not ad:
+            flash('Offre d\'emploi non trouvée', 'error')
+            return redirect(url_for('index'))
+
+        # Get user info for display
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute(
+            "SELECT first_name, surname FROM people WHERE id_people = %s", (session['user_id'],))
+        user = cursor.fetchone()
+        cursor.close()
+        connection.close()
+
+        if user:
+            session['user_name'] = f"{user['first_name']} {user['surname']}"
+
+        return render_template('candidater.html', ad=ad)
+
+    except Error as e:
+        print(f"Error loading application page: {e}")
+        flash('Erreur lors du chargement de la page', 'error')
+        return redirect(url_for('index'))
 
 
 @app.route("/api/apply", methods=['POST'])
@@ -766,11 +866,15 @@ def companies_crud():
 
             # Créer la nouvelle entreprise
             cursor.execute("""
-                INSERT INTO companies (name, address, description, website, created_by, sector, company_size) 
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO companies (name, address_street, address_postal_code, address_city, address_department, address_country, description, website, created_by, sector, company_size) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """, (
                 data['name'],
-                data.get('address'),
+                data.get('address_street'),
+                data.get('address_postal_code'),
+                data.get('address_city'),
+                data.get('address_department'),
+                data.get('address_country', 'France'),
                 data.get('description'),
                 data.get('website'),
                 user_id,
@@ -840,11 +944,16 @@ def company_crud(company_id):
             data = request.json
             cursor.execute("""
                 UPDATE companies 
-                SET name = %s, address = %s, description = %s, website = %s, sector = %s, company_size = %s
+                SET name = %s, address_street = %s, address_postal_code = %s, address_city = %s, 
+                    address_department = %s, address_country = %s, description = %s, website = %s, sector = %s, company_size = %s
                 WHERE id_company = %s
             """, (
                 data['name'],
-                data.get('address'),
+                data.get('address_street'),
+                data.get('address_postal_code'),
+                data.get('address_city'),
+                data.get('address_department'),
+                data.get('address_country', 'France'),
                 data.get('description'),
                 data.get('website'),
                 data.get('sector'),
@@ -933,11 +1042,15 @@ def manage_my_company():
 
             # Créer l'entreprise
             cursor.execute("""
-                INSERT INTO companies (name, address, description, website, sector, company_size, created_by) 
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO companies (name, address_street, address_postal_code, address_city, address_department, address_country, description, website, sector, company_size, created_by) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """, (
                 data.get('name'),
-                data.get('address'),
+                data.get('address_street'),
+                data.get('address_postal_code'),
+                data.get('address_city'),
+                data.get('address_department'),
+                data.get('address_country', 'France'),
                 data.get('description'),
                 data.get('website'),
                 data.get('sector'),
@@ -972,12 +1085,17 @@ def manage_my_company():
             # Mettre à jour l'entreprise
             cursor.execute("""
                 UPDATE companies SET 
-                name = %s, address = %s, description = %s, website = %s, 
+                name = %s, address_street = %s, address_postal_code = %s, address_city = %s,
+                address_department = %s, address_country = %s, description = %s, website = %s, 
                 sector = %s, company_size = %s 
                 WHERE id_company = %s AND created_by = %s
             """, (
                 data.get('name'),
-                data.get('address'),
+                data.get('address_street'),
+                data.get('address_postal_code'),
+                data.get('address_city'),
+                data.get('address_department'),
+                data.get('address_country', 'France'),
                 data.get('description'),
                 data.get('website'),
                 data.get('sector'),
@@ -1493,6 +1611,66 @@ def applications_crud():
 
     except Error as e:
         print(f"Error in applications CRUD: {e}")
+        return jsonify({"error": "Database error"}), 500
+    finally:
+        cursor.close()
+        connection.close()
+
+
+@app.route("/api/applications/<int:application_id>", methods=['DELETE', 'PUT'])
+def delete_or_mark_application(application_id):
+    """Delete or mark an application as deleted (admin only)"""
+    if not session.get('is_admin'):
+        return jsonify({"error": "Accès refusé"}), 403
+
+    connection = get_db_connection()
+    if connection is None:
+        return jsonify({"error": "Database connection error"}), 500
+
+    cursor = connection.cursor(dictionary=True)
+
+    try:
+        if request.method == 'DELETE':
+            # Hard delete - directly delete from database
+            cursor.execute(
+                "DELETE FROM job_applications WHERE id_application = %s", (application_id,))
+            connection.commit()
+
+            if cursor.rowcount > 0:
+                return jsonify({"success": True, "message": "Candidature supprimée définitivement"})
+            else:
+                return jsonify({"error": "Candidature non trouvée"}), 404
+
+        elif request.method == 'PUT':
+            # Soft delete - mark as deleted with reason, OR restore
+            data = request.json
+            deletion_reason = data.get('deletion_reason')
+
+            if deletion_reason == '':
+                # Restore the application
+                cursor.execute("""
+                    UPDATE job_applications 
+                    SET is_deleted = FALSE, deletion_reason = NULL, deleted_at = NULL
+                    WHERE id_application = %s
+                """, (application_id,))
+            else:
+                # Mark as deleted with reason
+                cursor.execute("""
+                    UPDATE job_applications 
+                    SET is_deleted = TRUE, deletion_reason = %s, deleted_at = CURRENT_TIMESTAMP
+                    WHERE id_application = %s
+                """, (deletion_reason, application_id))
+
+            connection.commit()
+
+            if cursor.rowcount > 0:
+                action = "restaurée" if deletion_reason == '' else "marquée comme supprimée"
+                return jsonify({"success": True, "message": f"Candidature {action}"})
+            else:
+                return jsonify({"error": "Candidature non trouvée"}), 404
+
+    except Exception as e:
+        print(f"Error deleting/marking application: {e}")
         return jsonify({"error": "Database error"}), 500
     finally:
         cursor.close()

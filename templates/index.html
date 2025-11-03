@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Board - Offres d'emploi</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/index.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='icon/NotLinkedIn_icon.ico') }}">
     <script src="{{ url_for('static', filename='script/script.js') }}"></script>
 </head>
@@ -96,47 +96,6 @@
             </section>
         </div>
     </main>
-
-    <!-- Application Modal -->
-    <div id="applicationModal" class="modal hidden">
-        <span class="close">&times;</span>
-        <div class="modal-header">
-            <h3 class="modal-title">Postuler à cette offre</h3>
-            <p class="modal-subtitle">Partagez votre motivation</p>
-        </div>
-        <form id="applicationForm" class="modal-form">
-                <input type="hidden" id="ad_id" name="ad_id">
-                
-                {% if not session.user_id %}
-                <div class="form-group">
-                    <label for="applicant_name" class="form-label">Nom complet</label>
-                    <input type="text" id="applicant_name" name="applicant_name" class="form-control" placeholder="Votre nom complet" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="applicant_email" class="form-label">Email</label>
-                    <input type="email" id="applicant_email" name="applicant_email" class="form-control" placeholder="votre@email.com" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="applicant_phone" class="form-label">Téléphone</label>
-                    <input type="tel" id="applicant_phone" name="applicant_phone" class="form-control" placeholder="0123456789">
-                </div>
-                {% endif %}
-                
-                <div class="form-group">
-                    <label for="application_message" class="form-label">Message de motivation</label>
-                    <textarea id="application_message" name="message" rows="5" class="form-control" placeholder="Expliquez pourquoi vous êtes le candidat idéal..." required></textarea>
-                </div>
-                
-                <button type="submit" class="modal-submit-btn">
-                    Envoyer la candidature
-                </button>
-                <button type="button" class="modal-cancel-btn" onclick="closeModal()">
-                    Annuler
-                </button>
-            </form>
-    </div>
 
     <footer>
         <div class="container">

@@ -99,8 +99,28 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="company_address" class="form-label">Adresse :</label>
-                                    <input type="text" id="company_address" name="address" class="form-control" value="{{ user.company_address or '' }}" placeholder="123 rue de l'Entreprise, Paris">
+                                    <label for="company_address_street" class="form-label">Rue :</label>
+                                    <input type="text" id="company_address_street" name="address_street" class="form-control" value="{{ user.address_street or '' }}" placeholder="123 rue de l'Entreprise">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="company_address_postal_code" class="form-label">Code postal :</label>
+                                    <input type="text" id="company_address_postal_code" name="address_postal_code" class="form-control" value="{{ user.address_postal_code or '' }}" placeholder="75015">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="company_address_city" class="form-label">Ville :</label>
+                                    <input type="text" id="company_address_city" name="address_city" class="form-control" value="{{ user.address_city or '' }}" placeholder="Paris">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="company_address_department" class="form-label">Département :</label>
+                                    <input type="text" id="company_address_department" name="address_department" class="form-control" value="{{ user.address_department or '' }}" placeholder="Paris">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="company_address_country" class="form-label">Pays :</label>
+                                    <input type="text" id="company_address_country" name="address_country" class="form-control" value="{{ user.address_country or 'France' }}" placeholder="France">
                                 </div>
                                 
                                 <div class="form-group">
@@ -232,8 +252,28 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="new_company_address" class="form-label">Adresse :</label>
-                                    <input type="text" id="new_company_address" name="address" class="form-control" placeholder="123 rue de l'Entreprise, Paris">
+                                    <label for="new_company_address_street" class="form-label">Rue :</label>
+                                    <input type="text" id="new_company_address_street" name="address_street" class="form-control" placeholder="123 rue de l'Entreprise">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="new_company_address_postal_code" class="form-label">Code postal :</label>
+                                    <input type="text" id="new_company_address_postal_code" name="address_postal_code" class="form-control" placeholder="75015">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="new_company_address_city" class="form-label">Ville :</label>
+                                    <input type="text" id="new_company_address_city" name="address_city" class="form-control" placeholder="Paris">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="new_company_address_department" class="form-label">Département :</label>
+                                    <input type="text" id="new_company_address_department" name="address_department" class="form-control" placeholder="Paris">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="new_company_address_country" class="form-label">Pays :</label>
+                                    <input type="text" id="new_company_address_country" name="address_country" class="form-control" placeholder="France">
                                 </div>
                                 
                                 <div class="form-group">

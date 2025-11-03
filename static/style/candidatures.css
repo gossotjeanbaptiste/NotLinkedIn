@@ -1,0 +1,300 @@
+/* ================= CANDIDATURES PAGE ================= */
+
+/* Ajustements pour la page candidatures pour suivre le style des autres pages */
+.breadcrumb {
+    margin-bottom: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+.breadcrumb-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.breadcrumb-link:hover {
+    color: var(--secondary-color);
+}
+
+.job-info-card {
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 2rem;
+}
+
+.job-title {
+    font-size: 1.8rem;
+    color: var(--white);
+    margin-bottom: 1rem;
+    margin-top: 0;
+}
+
+.job-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.job-meta span {
+    color: var(--white);
+    font-size: 1rem;
+    opacity: 1;
+}
+
+.job-description {
+    color: var(--white);
+    font-style: italic;
+    line-height: 1.5;
+    opacity: 1;
+    font-size: 1rem;
+}
+
+.candidatures-stats {
+    margin-bottom: 2.5rem;
+    margin-top: 2rem;
+}
+
+.candidatures-stats h4,
+.candidatures-list h4 {
+    color: var(--white);
+    margin-bottom: 1.5rem;
+    margin-top: 0;
+    font-size: 1.6rem;
+    font-weight: 600;
+}
+
+.candidatures-list {
+    margin-top: 2rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 0;
+}
+
+.stat-card {
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 1.5rem;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: var(--white);
+    font-size: 1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.application-card {
+    background: rgba(10, 10, 10, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.application-card:hover {
+    background: rgba(10, 10, 10, 0.8);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.application-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.applicant-info {
+    flex: 1;
+}
+
+.applicant-name {
+    color: var(--white);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.02em;
+}
+
+.applicant-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin-bottom: 0.5rem;
+}
+
+.applicant-email,
+.applicant-phone {
+    color: var(--white);
+    font-size: var(--font-md);
+    opacity: 1;
+}
+
+.applicant-address {
+    color: var(--white);
+    font-size: 1rem;
+    opacity: 1;
+}
+
+.application-status {
+    flex-shrink: 0;
+}
+
+.application-details {
+    border-top: none;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.application-message {
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.application-message h5 {
+    color: rgba(255, 255, 255, 0.95);
+    margin: 0 0 1rem 0;
+    font-size: 0.95em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.application-message p {
+    color: rgba(255, 255, 255, 0.92);
+    line-height: 1.7;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+    font-size: 0.95rem;
+    margin: 0;
+    font-style: italic;
+}
+
+.application-meta {
+    margin-top: 0;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.application-date {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.9rem;
+    opacity: 1;
+    font-style: italic;
+}
+
+.application-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    justify-content: space-between;
+}
+
+.action-label {
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 600;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.status-select {
+    padding: 0.75rem 1.25rem;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    border-radius: 8px;
+    background: rgba(50, 80, 110, 0.5);
+    color: var(--white);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 600;
+    min-width: 140px;
+}
+
+.status-select:hover {
+    background: rgba(50, 80, 110, 0.7);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.status-select {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    min-width: 150px;
+}
+
+.status-select:hover {
+    border-color: var(--primary-color);
+    background: rgba(30, 41, 59, 0.8);
+}
+
+.status-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.no-applications {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: rgba(30, 41, 59, 0.4);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 2rem;
+}
+
+.no-applications-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.no-applications h3 {
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.no-applications p {
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
