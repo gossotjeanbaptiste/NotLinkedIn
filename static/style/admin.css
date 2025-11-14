@@ -5,6 +5,16 @@
 @import url('admin_items.css');
 
 /* ================== ADMIN PANEL ================== */
+@font-face {
+    font-family: "Montserrat";
+    font-weight: 300;
+    src: url("../fonts/Montserrat.ttf");
+    font-display: swap;
+}
+
+body {
+    font-family: Montserrat;
+}
 
 /* ====== PANEL ADMIN PRINCIPAL ====== */
 .admin-panel {
@@ -117,6 +127,7 @@
 }
 
 .admin-action-btn {
+    font-family: Montserrat;
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
@@ -407,34 +418,34 @@
     .admin-panel {
         padding: var(--spacing-xl);
     }
-    
+
     .section-header {
         flex-direction: column;
         gap: var(--spacing-md);
         text-align: center;
     }
-    
+
     .admin-item {
         flex-direction: column;
         gap: var(--spacing-md);
     }
-    
+
     .item-actions {
         align-self: stretch;
         justify-content: center;
         flex-wrap: wrap;
     }
-    
+
     .admin-tabs {
         flex-direction: column;
         align-items: center;
     }
-    
+
     .tab-btn {
         width: 200px;
         justify-content: center;
     }
-    
+
     .applications-stats-grid {
         grid-template-columns: 1fr;
     }

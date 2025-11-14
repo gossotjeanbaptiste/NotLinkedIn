@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/login.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='icon/NotLinkedIn_icon.ico') }}">
 </head>
+
 <body>
     <header>
         <div class="container">
@@ -18,13 +20,13 @@
             <nav class="nav-main">
                 <a href="{{ url_for('index') }}" class="nav-link">Accueil</a>
                 {% if session.user_id %}
-                    <a href="{{ url_for('profile') }}" class="nav-link">Mon Profil</a>
-                    {% if session.is_admin %}
-                        <a href="{{ url_for('admin') }}" class="nav-link">Administration</a>
-                    {% endif %}
-                    <a href="{{ url_for('logout') }}" class="nav-link">Déconnexion</a>
+                <a href="{{ url_for('profile') }}" class="nav-link">Mon Profil</a>
+                {% if session.is_admin %}
+                <a href="{{ url_for('admin') }}" class="nav-link">Administration</a>
+                {% endif %}
+                <a href="{{ url_for('logout') }}" class="nav-link">Déconnexion</a>
                 {% else %}
-                    <a href="{{ url_for('register') }}" class="nav-link">Inscription</a>
+                <a href="{{ url_for('register') }}" class="nav-link">Inscription</a>
                 {% endif %}
             </nav>
         </div>
@@ -37,40 +39,43 @@
                 <h2 class="auth-title">Connexion</h2>
                 <p class="auth-subtitle">Accédez à votre espace personnel</p>
             </div>
-            
+
             {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
             {% endwith %}
 
             <form method="POST" class="auth-form">
                 <div class="form-group">
                     <label for="login" class="form-label">Nom d'utilisateur</label>
-                    <input type="text" id="login" name="login" class="form-control" placeholder="Saisissez votre nom d'utilisateur" required>
+                    <input type="text" id="login" name="login" class="form-control"
+                        placeholder="Saisissez votre nom d'utilisateur" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="password" class="form-label">Mot de passe</label>
-                    <input type="password" id="password" name="password" class="form-control" placeholder="Saisissez votre mot de passe" required>
+                    <input type="password" id="password" name="password" class="form-control"
+                        placeholder="Saisissez votre mot de passe" required>
                 </div>
-                
+
                 <button type="submit" class="apply-btn">
                     Se connecter
                 </button>
             </form>
-            
+
             <div class="auth-links">
                 <p>
-                    Pas encore de compte ? 
+                    Pas encore de compte ?
                     <a href="{{ url_for('register') }}" class="auth-link">Inscrivez-vous ici</a>
                 </p>
             </div>
         </div>
     </main>
 </body>
+
 </html>

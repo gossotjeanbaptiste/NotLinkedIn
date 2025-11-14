@@ -2,6 +2,13 @@
 @import url('./variables.css');
 
 /* ================== COMPANY MANAGEMENT PAGE ================== */
+main {
+    min-height: 0;
+}
+
+main.container {
+    margin-top: 7rem;
+}
 
 .company-container {
     max-width: var(--max-width);
@@ -225,17 +232,17 @@
     .company-container {
         padding: var(--spacing-lg);
     }
-    
+
     .company-header {
         flex-direction: column;
         align-items: flex-start;
     }
-    
+
     .company-actions {
         width: 100%;
         margin-top: var(--spacing-md);
     }
-    
+
     .company-details {
         grid-template-columns: 1fr;
     }
