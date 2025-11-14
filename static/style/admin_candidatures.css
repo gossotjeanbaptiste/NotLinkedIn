@@ -3,6 +3,17 @@
 
 /* Admin Applications Management Style */
 
+@font-face {
+    font-family: "Montserrat";
+    font-weight: 300;
+    src: url("../fonts/Montserrat.ttf");
+    font-display: swap;
+}
+
+body {
+    font-family: Montserrat;
+}
+
 .admin-applications-section {
     padding: 2rem 0;
 }
@@ -378,12 +389,14 @@
 }
 
 .admin-deletion-buttons {
+    font-family: Montserrat;
     display: flex;
     gap: 1rem;
     justify-content: flex-end;
 }
 
 .admin-deletion-buttons button {
+    font-family: Montserrat;
     padding: 0.6rem 1.5rem;
     border: none;
     border-radius: 6px;
@@ -394,7 +407,7 @@
 
 .admin-deletion-confirm {
     background: rgba(255, 77, 77, 0.3);
-    color: #ff6b6b;
+    color: var(--white);
     border: 1px solid rgba(255, 77, 77, 0.5);
 }
 
