@@ -329,7 +329,7 @@ Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
 ## 👨‍💻 Auteur
 
-**Gosso Jean-Baptiste**
+**Gossot Jean-Baptiste**
 
 - GitHub: [@gossotjeanbaptiste](https://github.com/gossotjeanbaptiste)
 - Email: jean-baptiste.gossot@epitech.eu
@@ -343,16 +343,6 @@ Pour toute question ou problème:
 1. Consulter les issues existantes
 2. Créer une nouvelle issue avec description détaillée
 3. Fournir des logs/screenshots si possible
-
----
-
-## 🙏 Remerciements
-
-- Polices Bitcount pour le design
-- Communauté Flask
-- Contributors et testeurs
-
----
 
 **Dernière mise à jour**: 3 novembre 2025
 **Version**: 1.0.0

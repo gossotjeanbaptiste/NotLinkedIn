@@ -1,4 +1,11 @@
+@import url('general.css');
+@import url('variables.css');
+
 /* ================= CANDIDATURES PAGE ================= */
+
+main.container {
+    margin-top: 7rem;
+}
 
 /* Ajustements pour la page candidatures pour suivre le style des autres pages */
 .breadcrumb {

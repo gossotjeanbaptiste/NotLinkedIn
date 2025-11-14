@@ -3,6 +3,10 @@
 
 /* ================== AJOUTER OFFRE PAGE ================== */
 
+main.container {
+    margin-top: 7rem;
+}
+
 .create-offer-container {
     max-width: var(--max-width);
     margin: 0 auto;
@@ -41,17 +45,6 @@
     border-radius: var(--border-radius);
     padding: var(--spacing-xl);
     animation: fadeIn 0.8s ease 0.2s backwards;
-}
-
-.form-section {
-    margin-bottom: var(--spacing-xl);
-    padding-bottom: var(--spacing-xl);
-    border-bottom: 1px solid var(--white-2);
-}
-
-.form-section:last-of-type {
-    border-bottom: none;
-    margin-bottom: var(--spacing-lg);
 }
 
 .form-section-title {
@@ -182,25 +175,94 @@ textarea.form-control {
     color: #ff6b6b;
 }
 
+/* ====== FORM ACTIONS ====== */
+.form-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+    margin-top: var(--spacing-3xl);
+    padding-top: var(--spacing-xl);
+    border-top: 1px solid var(--white-2);
+}
+
+.btn-create-job-submit {
+    background: transparent;
+    border: 2px solid var(--white-5);
+    color: var(--white-8);
+    border-radius: var(--border-radius-pill);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-family: "Montserrat", sans-serif;
+    font-size: var(--font-sm);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: var(--transition-smooth);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-create-job-submit:hover {
+    background: var(--white-1);
+    border-color: var(--white);
+    color: var(--white);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;
+}
+
+.btn-create-job-cancel {
+    background: transparent;
+    border: 2px solid var(--white-5);
+    color: var(--white-8);
+    border-radius: var(--border-radius-pill);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-family: "Montserrat", sans-serif;
+    font-size: var(--font-sm);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: var(--transition-smooth);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin-left: var(--spacing-md);
+}
+
+.btn-create-job-cancel:hover {
+    background: var(--white-1);
+    border-color: var(--white);
+    color: var(--white);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;
+}
+
 /* ====== RESPONSIVE ====== */
 @media (max-width: 768px) {
     .create-offer-container {
         padding: var(--spacing-lg);
     }
-    
+
     .create-offer-header,
     .create-offer-form-container {
         padding: var(--spacing-lg);
     }
-    
+
     .form-row {
         grid-template-columns: 1fr;
     }
-    
+
     .form-buttons {
         flex-direction: column;
     }
-    
+
     .btn {
         width: 100%;
     }
