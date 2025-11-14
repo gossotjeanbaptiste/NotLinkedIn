@@ -5,21 +5,20 @@ Une plateforme web complète de recherche d'emploi développée avec **Python Fl
 ## 📋 Table des matières
 
 - [Vue d'ensemble](#vue-densemble)
-- [Fonctionnalités](#fonctionnalités)
+- [Fonctionnalités](#fonctionnalites)
 - [Architecture](#architecture)
 - [Installation](#installation)
 - [Utilisation](#utilisation)
-- [Structure du projet](#structure-du-projet)
 - [Technologies](#technologies)
 - [Statut du projet](#statut-du-projet)
 
 ---
 
-## 🎯 Vue d'ensemble
+## 🎯 Vue d'ensemble {#vue-densemble}
 
 NotLinkedIn est une plateforme job board permettant aux **entreprises** de publier des offres d'emploi et aux **candidats** de postuler, gérer leur profil et suivre leurs candidatures.
 
-### Points clés:
+### Points clés
 
 - ✅ **Responsive design** avec CSS Glass Morphism
 - ✅ **Architecture CSS modulaire** (styles per-page)
@@ -31,7 +30,7 @@ NotLinkedIn est une plateforme job board permettant aux **entreprises** de publi
 
 ---
 
-## 🚀 Fonctionnalités
+## 🚀 Fonctionnalités {#fonctionnalites}
 
 ### Pour les Candidats
 
@@ -65,7 +64,7 @@ NotLinkedIn est une plateforme job board permettant aux **entreprises** de publi
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Architecture {#architecture}
 
 ### Structure de fichiers
 
@@ -155,7 +154,7 @@ Techniques CSS:
 
 ---
 
-## 💾 Installation
+## 💾 Installation {#installation}
 
 ### Prérequis
 
@@ -213,7 +212,7 @@ L'application sera disponible à: `http://localhost:5000`
 
 ---
 
-## 🎮 Utilisation
+## 🎮 Utilisation {#utilisation}
 
 ### Liste des users/passwords
 
@@ -246,7 +245,7 @@ L'application sera disponible à: `http://localhost:5000`
 
 ---
 
-## 🛠️ Technologies
+## 🛠️ Technologies {#technologies}
 
 ### Backend
 
@@ -281,7 +280,7 @@ L'application sera disponible à: `http://localhost:5000`
 
 ---
 
-## 📊 Statut du projet
+## 📊 Statut du projet {#statut-du-projet}
 
 ### ✅ Complété
 
@@ -302,10 +301,11 @@ L'application sera disponible à: `http://localhost:5000`
 
 ## 👨‍💻 Auteur
 
-**Gossot Jean-Baptiste**
+### GOSSOT (POGGIO) Jean-Baptiste
 
 - GitHub: [@gossotjeanbaptiste](https://github.com/gossotjeanbaptiste)
-- Email: jean-baptiste.gossot@epitech.eu
+- Portfolio: [gossotjeanbaptiste.github.io](https://gossotjeanbaptiste.github.io)
+- Email: [jean-baptiste.gossot@epitech.eu](mailto:jean-baptiste.gossot@epitech.eu)
 
 ---
 
