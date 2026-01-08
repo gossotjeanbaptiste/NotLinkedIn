@@ -60,11 +60,15 @@ async function loadCompanies(page = 1) {
 
 function displayCompanies(companies) {
     const container = document.getElementById('companies-list');
-    container.innerHTML = companies.map(company => `
+    container.innerHTML = companies.map(company => {
+        const address = [company.address_street, company.address_postal_code, company.address_city]
+            .filter(part => part && part.trim())
+            .join(', ') || 'Non spécifiée';
+        return `
         <div class="admin-item">
             <div class="item-info">
                 <h4>${company.name}</h4>
-                <p><strong>Adresse:</strong> ${company.address || 'Non spécifiée'}</p>
+                <p><strong>Adresse:</strong> ${address}</p>
                 <p><strong>Description:</strong> ${company.description || 'Non spécifiée'}</p>
                 <p><strong>Site web:</strong> ${company.website ? `<a href="${company.website}" target="_blank" class="company-website-link">${company.website}</a>` : 'Non spécifié'}</p>
             </div>
@@ -73,7 +77,7 @@ function displayCompanies(companies) {
                 <button class="btn btn-danger" onclick="deleteCompany(${company.id_company})">Supprimer</button>
             </div>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 async function loadAdvertisements(page = 1) {
