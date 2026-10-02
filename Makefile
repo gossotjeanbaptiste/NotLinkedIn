@@ -1,10 +1,18 @@
 # Makefile pour NotLinkedIn
 
-.PHONY: run db clean
+.PHONY: all new run db clean
 
-run: db
-	@python3 -c "import flask, mysql.connector" 2>/dev/null || (echo "Installation des dépendances..." && pip3 install --user -r requirements.txt)
-	python3 app.py
+VENV := .venv
+PYTHON := $(VENV)/bin/python
+
+all: run
+
+new: db
+	python3 -m venv $(VENV)
+	$(PYTHON) -m pip install -r requirements.txt
+
+run: new
+	$(PYTHON) app.py
 
 db:
 	bash setup_db_auto.sh
